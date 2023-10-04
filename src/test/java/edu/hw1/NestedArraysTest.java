@@ -52,10 +52,32 @@ public class NestedArraysTest {
     }
 
     @Test
+    @DisplayName("Тест NestedArrays.isNestable(int[], int[]) - [1, 2, 3, 4], [0, 2, 3]")
+    public void isNestable_shouldReturnFalse_whenArrayIsNotNested_2() {
+        int[] givenValue = {1, 2, 3, 4};
+        int[] externalValue = {0, 2, 3};
+
+        boolean actual = NestedArrays.isNestable(givenValue, externalValue);
+
+        assertThat(actual).isFalse();
+    }
+
+    @Test
     @DisplayName("Тест NestedArrays.isNestable(int[], int[]) - null, [2, 3]")
     public void isNestable_shouldReturnFalse_whenArrayIsNull() {
         int[] givenValue = null;
         int[] externalValue = {2, 3};
+
+        boolean actual = NestedArrays.isNestable(givenValue, externalValue);
+
+        assertThat(actual).isFalse();
+    }
+
+    @Test
+    @DisplayName("Тест NestedArrays.isNestable(int[], int[]) - [2, 3], null")
+    public void isNestable_shouldReturnFalse_whenArrayIsNull_2() {
+        int[] givenValue = {2, 3};
+        int[] externalValue = null;
 
         boolean actual = NestedArrays.isNestable(givenValue, externalValue);
 

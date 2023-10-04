@@ -80,6 +80,26 @@ public class TestHorsesOnBoard {
     }
 
     @Test
+    @DisplayName("Тест HorsesOnBoard.isSafeSituation(int[][]) с неправильными входными данными")
+    public void isSafeSituation_shouldThrowIllegalArgumentException_whenDataFirstLineIsIncorrect() {
+
+        int[][] board = {
+            {0, 0, 0, 0},
+            {0, 0, 0, 0},
+            {0, 0, 0, 1},
+            {0, 0, 0, 1},
+            {0, 0, 0, 1},
+            {0, 0, 0, 1},
+            {0, 0, 0, 1},
+            {0, 0, 0, 1},
+        };
+
+        assertThatThrownBy(() -> {
+            boolean actual = HorsesOnBoard.isSafeSituation(board);
+        }).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
     @DisplayName("Тест HorsesOnBoard.isSafeSituation(int[][]) с null входными данными")
     public void isSafeSituation_shouldThrowNullPointerException_whenDataIsIncorrect() {
 

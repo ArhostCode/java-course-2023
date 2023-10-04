@@ -13,8 +13,13 @@ public final class HorsesOnBoard {
 
     public static boolean isSafeSituation(int[][] board) {
         Objects.requireNonNull(board);
-        if (board.length != BOARD_SIZE || board[0].length != BOARD_SIZE) {
-            throw new IllegalArgumentException("Wrong board size");
+        if (board.length != BOARD_SIZE) {
+            throw new IllegalArgumentException("Wrong board width");
+        }
+        for (int[] ints : board) {
+            if (ints.length != BOARD_SIZE) {
+                throw new IllegalArgumentException("Wrong board length");
+            }
         }
 
         for (int y = 0; y < BOARD_SIZE; y++) {

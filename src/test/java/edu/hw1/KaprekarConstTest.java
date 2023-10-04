@@ -23,7 +23,7 @@ public class KaprekarConstTest {
 
     @DisplayName("Тест KaprekarConst.stepsToKaprekarConst(int) с неверными входными данными")
     @ParameterizedTest(name = "{index} - {0} - неверные входные данные")
-    @ValueSource(ints = {1111, 5555, 100, -1000})
+    @ValueSource(ints = {1111, 5555, 100, -1000, 10000})
     public void stepsToKaprekarConst_shouldReturnMinusOne_whenInputInCorrect(int num) {
         int actual = KaprekarConst.stepsToKaprekarConst(num);
         assertThat(actual).isEqualTo(-1);
