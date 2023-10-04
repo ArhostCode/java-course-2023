@@ -6,14 +6,20 @@ public final class CircularShift {
     }
 
     public static int rotateLeft(int n, int shift) {
+        if (shift < 0 || n < 0) {
+            return -1;
+        }
         int bitsCount = Integer.toBinaryString(n).length();
         int newShift = shift % bitsCount;
-        return (n << newShift | n >> (bitsCount - newShift)) & ((1 << (bitsCount - 1)) - 1);
+        return (n << newShift | n >> (bitsCount - newShift)) & ((1 << (bitsCount)) - 1);
     }
 
     public static int rotateRight(int n, int shift) {
+        if (shift < 0 || n < 0) {
+            return -1;
+        }
         int bitsCount = Integer.toBinaryString(n).length();
         int newShift = shift % bitsCount;
-        return n >> newShift | n << (bitsCount - newShift) & ((1 << (bitsCount - 1)) - 1);
+        return n >> newShift | n << (bitsCount - newShift) & ((1 << bitsCount) - 1);
     }
 }
