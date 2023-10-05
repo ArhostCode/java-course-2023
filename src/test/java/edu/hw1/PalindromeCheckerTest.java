@@ -34,7 +34,7 @@ public class PalindromeCheckerTest {
 
     @DisplayName("Тест PalindromeChecker.isPalindrome(int) с не палиндромом")
     @ParameterizedTest(name = "{index} - {0} - не палиндром")
-    @ValueSource(ints = {124, 432})
+    @ValueSource(ints = {124, 432,2939})
     public void isPalindrome_shouldReturnFalse_whenInputIsNotPalindrome(int num) {
         boolean actual = PalindromeChecker.isPalindrome(num);
         assertThat(actual).isFalse();
