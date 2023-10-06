@@ -74,9 +74,7 @@ public class TestHorsesOnBoard {
             {0, 0, 0, 1, 0, 0, 0, 0},
         };
 
-        assertThatThrownBy(() -> {
-            boolean actual = HorsesOnBoard.isSafeSituation(board);
-        }).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> HorsesOnBoard.isSafeSituation(board)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -94,9 +92,7 @@ public class TestHorsesOnBoard {
             {0, 0, 0, 1},
         };
 
-        assertThatThrownBy(() -> {
-            boolean actual = HorsesOnBoard.isSafeSituation(board);
-        }).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> HorsesOnBoard.isSafeSituation(board)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -105,9 +101,7 @@ public class TestHorsesOnBoard {
 
         int[][] board = null;
 
-        assertThatThrownBy(() -> {
-            boolean actual = HorsesOnBoard.isSafeSituation(board);
-        }).isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> HorsesOnBoard.isSafeSituation(board)).isInstanceOf(NullPointerException.class);
     }
 
 }

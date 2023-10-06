@@ -6,19 +6,19 @@ public final class NestedArrays {
     private NestedArrays() {
     }
 
-    public static boolean isNestable(int[] value, int[] external) {
-        if (value == null || external == null) {
+    public static boolean isNestable(int[] internal, int[] external) {
+        if (internal == null || external == null || internal.length == 0 || external.length == 0) {
             return false;
         }
 
-        // Min and Max in value
-        int minimumValue = Arrays.stream(value).min().orElse(0);
-        int maxValue = Arrays.stream(value).max().orElse(0);
+        // Min and Max in internal
+        int minimumInternal = Arrays.stream(internal).min().getAsInt();
+        int maxInternal = Arrays.stream(internal).max().getAsInt();
 
         // Min and Max in external
-        int minimumExternal = Arrays.stream(external).min().orElse(0);
-        int maxExternal = Arrays.stream(external).max().orElse(0);
+        int minimumExternal = Arrays.stream(external).min().getAsInt();
+        int maxExternal = Arrays.stream(external).max().getAsInt();
 
-        return minimumValue > minimumExternal && maxValue < maxExternal;
+        return minimumInternal > minimumExternal && maxInternal < maxExternal;
     }
 }
