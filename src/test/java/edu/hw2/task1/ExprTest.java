@@ -1,11 +1,5 @@
 package edu.hw2.task1;
 
-import edu.hw2.task1.Addition;
-import edu.hw2.task1.Constant;
-import edu.hw2.task1.Exponent;
-import edu.hw2.task1.Expr;
-import edu.hw2.task1.Multiplication;
-import edu.hw2.task1.Negate;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

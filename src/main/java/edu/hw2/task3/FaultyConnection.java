@@ -21,7 +21,7 @@ public class FaultyConnection implements Connection {
     @Override
     public void execute(String command) {
         if (random.nextBoolean()) {
-            throw new ConnectionException();
+            throw new ConnectionException("Can`t connect to server");
         }
         LOGGER.info("Faulty connection execute command " + command);
     }

@@ -17,6 +17,7 @@ public class RemoteServerTest {
     @Test
     @DisplayName("Тест DefaultConnectionManager#getConnection, что он может возвращать StableConnection")
     public void getConnection_shouldReturnStableConnection_whenConnectionManagerDefaultAndRandomReturnTrue() {
+        // I not sure, that using prepared random with seed is good case. But otherwise there is no way to cover half of the code of this task with tests.
         Random random = new Random(1);
         Connection connection = new DefaultConnectionManager(random).getConnection();
         assertThat(connection).isInstanceOf(StableConnection.class);
@@ -52,8 +53,11 @@ public class RemoteServerTest {
     @DisplayName(
         "Тест PopularCommandExecutor#tryExecute, что он выбрасывает исключение, когда передано неправильное максимальное количество попыток")
     public void tryExecute_shouldThrowException_whenWrongMaxAttempts() {
-        assertThatThrownBy(() -> new PopularCommandExecutor(new DefaultConnectionManager(new Random(1)), 0)).isInstanceOf(IllegalArgumentException.class);
+        ConnectionManager connectionManager = new DefaultConnectionManager(new Random(1));
+        assertThatThrownBy(() -> new PopularCommandExecutor(
+            connectionManager,
+            0
+        )).isInstanceOf(IllegalArgumentException.class);
     }
-
 
 }

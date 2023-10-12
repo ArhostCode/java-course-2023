@@ -2,23 +2,26 @@ package edu.hw2.task2;
 
 public class Rectangle {
 
-    private int height;
-    private int width;
+    private final int height;
+    private final int width;
 
     public Rectangle() {
+        this(0, 0);
     }
 
-    public Rectangle(int height, int width) {
+    public Rectangle(int width, int height) {
         this.width = width;
         this.height = height;
     }
 
-    public final Rectangle setWidth(int width) {
-        return new Rectangle(height, width);
+    // Immutable class return new object with given width and actual height
+    public final Rectangle withWidth(int width) {
+        return new Rectangle(width, height);
     }
 
-    public final Rectangle setHeight(int height) {
-        return new Rectangle(height, width);
+    // Immutable class return new object with given height and actual width
+    public final Rectangle withHeight(int height) {
+        return new Rectangle(width, height);
     }
 
     public int getHeight() {

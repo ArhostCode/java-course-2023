@@ -29,7 +29,9 @@ public final class PopularCommandExecutor {
                 LOGGER.trace("Command has been executed");
                 return;
             } catch (Exception e) {
-                throwedException = (ConnectionException) e;
+                if (e instanceof ConnectionException) {
+                    throwedException = (ConnectionException) e;
+                }
                 attempt++;
             }
         }

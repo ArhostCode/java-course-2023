@@ -1,15 +1,13 @@
 package edu.hw2.task1;
 
-public record Exponent(Expr expr, double degree) implements Expr {
+public record Exponent(Expr expr, Expr degree) implements Expr {
 
-    public Exponent {
-        if (expr.evaluate() == 0 && degree <= 0) {
-            throw new IllegalArgumentException("For 0 degree must be greater than 0");
-        }
+    public Exponent(Expr expr, double degree) {
+        this(expr, new Constant(degree));
     }
 
     @Override
     public double evaluate() {
-        return Math.pow(expr.evaluate(), degree);
+        return Math.pow(expr.evaluate(), degree.evaluate());
     }
 }
