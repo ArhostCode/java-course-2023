@@ -1,13 +1,15 @@
 package edu.hw3.task5;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Stream;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Stream;
 
 public class ContactSorterTest {
 
@@ -59,5 +61,13 @@ public class ContactSorterTest {
     @MethodSource("contactArguments")
     public void sortContacts_shouldReturnCorrectValue(List<String> given, String sortType, List<Contact> expected) {
         Assertions.assertThat(ContactSorter.sortContacts(given, sortType)).containsAll(expected);
+    }
+
+    @DisplayName("Тест ContactSorter#sortContacts с неверным типом сортировки")
+    @Test
+    public void sortContacts_shouldThrowException_whenSortTypeInvalid() {
+        Assertions.assertThatThrownBy(() -> {
+            ContactSorter.sortContacts(List.of("hello"), "D");
+        }).isInstanceOf(IllegalArgumentException.class);
     }
 }
