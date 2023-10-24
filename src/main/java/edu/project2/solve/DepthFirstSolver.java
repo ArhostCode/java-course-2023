@@ -3,7 +3,6 @@ package edu.project2.solve;
 import edu.project2.model.Cell;
 import edu.project2.model.Coordinate;
 import edu.project2.model.Maze;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

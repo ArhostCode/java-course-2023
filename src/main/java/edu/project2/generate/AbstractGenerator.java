@@ -3,7 +3,6 @@ package edu.project2.generate;
 import edu.project2.model.Cell;
 import edu.project2.model.Maze;
 import edu.project2.model.Pair;
-import edu.project2.render.UnicodeRenderer;
 
 public abstract class AbstractGenerator implements Generator {
     protected static final int WALL_OFFSET = 2;

@@ -36,7 +36,6 @@ public class MazeTaskLifeCycle {
         this.userWriter = userWriter;
     }
 
-    @SuppressWarnings({"checkstyle:MagicNumber"})
     public void run() {
         userWriter.write(Message.HELLO_MESSAGE);
         userWriter.write(Message.WRITE_SIZES);
