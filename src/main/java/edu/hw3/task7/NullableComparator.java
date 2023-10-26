@@ -8,8 +8,11 @@ public class NullableComparator<T extends Comparable<T>> implements Comparator<T
         if (o1 == o2) {
             return 0;
         }
-        if (o1 == null || o2 == null) {
+
+        if (o1 == null) {
             return -1;
+        } else if (o2 == null) {
+            return 1;
         }
         return o1.compareTo(o2);
     }
