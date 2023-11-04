@@ -36,7 +36,15 @@ public class BasicConfigurationParserTest {
                 }
             )
             .extracting("paths", "isRemote")
-            .containsExactly(List.of("logs\\dir\\log3.txt", "logs\\log1.txt", "logs\\log2.txt"), false);
+            .satisfies(
+                c -> {
+                    Assertions.assertThat(c.get(0)).isIn(
+                        List.of("logs\\dir\\log3.txt", "logs\\log1.txt", "logs\\log2.txt"),
+                        List.of("logs/dir/log3.txt", "logs/log1.txt", "logs/log2.txt")
+                    );
+                    Assertions.assertThat(c.get(1)).isEqualTo(false);
+                }
+            );
     }
 
 }
