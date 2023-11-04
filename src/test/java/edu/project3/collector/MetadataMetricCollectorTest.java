@@ -24,7 +24,7 @@ public class MetadataMetricCollectorTest extends MetricCollectorTest {
                     .addRowElements("Начальная дата", "-999999999-01-01T00:00+18:00")
                     .addRowElements("Конечная дата", "+999999999-12-31T23:59:59.999999999-18:00")
                     .addRowElements("Количество запросов", "5")
-                    .addRowElements("Средний размер ответа", "1604,00b")
+                    .addRowElements("Средний размер ответа", "1604.00b")
             ));
     }
 }

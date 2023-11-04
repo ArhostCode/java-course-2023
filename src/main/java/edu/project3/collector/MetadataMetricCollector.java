@@ -6,6 +6,7 @@ import edu.project3.model.metric.Metric;
 import edu.project3.model.metric.components.MetricTable;
 import edu.project3.utils.MetricComponentsUtils;
 import java.util.List;
+import java.util.Locale;
 
 public class MetadataMetricCollector implements MetricCollector {
     @Override
@@ -31,6 +32,7 @@ public class MetadataMetricCollector implements MetricCollector {
 
     private String getAverageResponseSize(List<NginxLog> logs) {
         return String.format(
+            Locale.US,
             "%.2fb",
             logs.stream().map(log -> log.response().bytesSend()).mapToInt(Integer::intValue).average()
                 .orElse(0)
