@@ -40,7 +40,7 @@ public class BasicConfigurationParserTest {
                 c -> {
                     Assertions.assertThat(c.get(0)).isIn(
                         List.of("logs\\dir\\log3.txt", "logs\\log1.txt", "logs\\log2.txt"),
-                        List.of("logs/dir/log3.txt", "logs/log1.txt", "logs/log2.txt")
+                        List.of("logs/log1.txt", "logs/log2.txt","logs/dir/log3.txt")
                     );
                     Assertions.assertThat(c.get(1)).isEqualTo(false);
                 }
