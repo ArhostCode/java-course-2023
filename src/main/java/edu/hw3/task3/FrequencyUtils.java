@@ -1,8 +1,9 @@
 package edu.hw3.task3;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public final class FrequencyUtils {
     private FrequencyUtils() {
@@ -12,14 +13,7 @@ public final class FrequencyUtils {
         if (objects == null) {
             throw new NullPointerException("List objects must be not null");
         }
-        Map<T, Integer> freqMap = new HashMap<>();
-        objects.forEach(obj -> {
-            if (freqMap.containsKey(obj)) {
-                freqMap.compute(obj, (object, value) -> (value + 1));
-            } else {
-                freqMap.put(obj, 1);
-            }
-        });
-        return freqMap;
+        return objects.stream()
+            .collect(Collectors.groupingBy(Function.identity(), Collectors.summingInt(o -> 1)));
     }
 }

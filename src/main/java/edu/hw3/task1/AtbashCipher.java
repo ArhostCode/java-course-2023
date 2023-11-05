@@ -20,8 +20,8 @@ public final class AtbashCipher {
         return atbashStringBuilder.toString();
     }
 
-    private static boolean isLatinLetter(char letter) {
-        return (letter >= 'A' && letter <= 'Z') || (letter >= 'a' && letter <= 'z');
+    private static boolean isLatinLetter(char symbol) {
+        return (symbol >= 'A' && symbol <= 'Z') || (symbol >= 'a' && symbol <= 'z');
     }
 
     private static char getMirrorLetter(char letter) {

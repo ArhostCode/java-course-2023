@@ -2,9 +2,9 @@ package edu.hw3.task4;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 public class RomanNumbersConverterTest {
 
@@ -23,17 +23,11 @@ public class RomanNumbersConverterTest {
         Assertions.assertThat(RomanNumbersConverter.convertToRomanNumber(num)).isEqualTo(expected);
     }
 
-    @Test
+    @ParameterizedTest
     @DisplayName("Тест RomanNumbersConverter#convertToRomanNumber на неверных данных <= 0")
-    public void convertToRomanNumber_shouldThrowIllegalArgumentException_whenInputIncorrect() {
-        Assertions.assertThatThrownBy(() -> RomanNumbersConverter.convertToRomanNumber(-5))
-            .isInstanceOf(IllegalArgumentException.class);
-    }
-
-    @Test
-    @DisplayName("Тест RomanNumbersConverter#convertToRomanNumber на неверных данных > 3999")
-    public void convertToRomanNumber_shouldThrowIllegalArgumentException_whenInputIncorrect_1() {
-        Assertions.assertThatThrownBy(() -> RomanNumbersConverter.convertToRomanNumber(4000))
+    @ValueSource(ints = {-5, 4000})
+    public void convertToRomanNumber_shouldThrowIllegalArgumentException_whenInputIncorrect(int value) {
+        Assertions.assertThatThrownBy(() -> RomanNumbersConverter.convertToRomanNumber(value))
             .isInstanceOf(IllegalArgumentException.class);
     }
 

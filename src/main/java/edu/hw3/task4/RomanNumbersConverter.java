@@ -36,14 +36,12 @@ public final class RomanNumbersConverter {
         StringBuilder romanNumber = new StringBuilder();
         int lastIndex = 0;
         while (number > 0) {
-            for (int i = lastIndex; i < ROMAN_LITERALS.size(); i++) {
-                RomanLiteral romanLiteral = ROMAN_LITERALS.get(i);
-                if (number >= romanLiteral.num) {
-                    number -= romanLiteral.num;
-                    romanNumber.append(romanLiteral.literal);
-                    lastIndex = i;
-                    break;
-                }
+            RomanLiteral romanLiteral = ROMAN_LITERALS.get(lastIndex);
+            if (number >= romanLiteral.num) {
+                number -= romanLiteral.num;
+                romanNumber.append(romanLiteral.literal);
+            } else {
+                lastIndex++;
             }
         }
         return romanNumber.toString();

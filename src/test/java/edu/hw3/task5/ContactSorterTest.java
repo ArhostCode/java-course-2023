@@ -1,15 +1,13 @@
 package edu.hw3.task5;
 
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 public class ContactSorterTest {
 
@@ -17,7 +15,7 @@ public class ContactSorterTest {
         return Stream.of(
             Arguments.of(
                 List.of("John Locke", "Thomas Aquinas", "David Hume", "Rene Descartes"),
-                "ASC",
+                ContactSorter.SortType.ASC,
                 List.of(
                     Contact.fromString("Thomas Aquinas"),
                     Contact.fromString("Rene Descartes"),
@@ -27,7 +25,7 @@ public class ContactSorterTest {
             ),
             Arguments.of(
                 List.of("Paul Erdos", "Leonhard Euler", "Carl Gauss"),
-                "DESC",
+                ContactSorter.SortType.DESC,
                 List.of(
                     Contact.fromString("Carl Gauss"),
                     Contact.fromString("Leonhard Euler"),
@@ -36,7 +34,7 @@ public class ContactSorterTest {
             ),
             Arguments.of(
                 List.of("Paul", "Leonhard Euler", "Carl Gauss"),
-                "DESC",
+                ContactSorter.SortType.DESC,
                 List.of(
                     Contact.fromString("Paul"),
                     Contact.fromString("Carl Gauss"),
@@ -45,12 +43,12 @@ public class ContactSorterTest {
             ),
             Arguments.of(
                 null,
-                "DESC",
+                ContactSorter.SortType.DESC,
                 Collections.emptyList()
             ),
             Arguments.of(
                 Collections.emptyList(),
-                "DESC",
+                ContactSorter.SortType.DESC,
                 Collections.emptyList()
             )
         );
@@ -59,15 +57,11 @@ public class ContactSorterTest {
     @DisplayName("Тест ContactSorter#sortContacts")
     @ParameterizedTest(name = "{0} - правильно сортируется")
     @MethodSource("contactArguments")
-    public void sortContacts_shouldReturnCorrectValue(List<String> given, String sortType, List<Contact> expected) {
-        Assertions.assertThat(ContactSorter.sortContacts(given, sortType)).containsAll(expected);
-    }
-
-    @DisplayName("Тест ContactSorter#sortContacts с неверным типом сортировки")
-    @Test
-    public void sortContacts_shouldThrowException_whenSortTypeInvalid() {
-        Assertions.assertThatThrownBy(() -> {
-            ContactSorter.sortContacts(List.of("hello"), "D");
-        }).isInstanceOf(IllegalArgumentException.class);
+    public void sortContacts_shouldReturnCorrectValue(
+        List<String> given,
+        ContactSorter.SortType sortType,
+        List<Contact> expected
+    ) {
+        Assertions.assertThat(ContactSorter.sortContacts(given, sortType)).isEqualTo(expected);
     }
 }
