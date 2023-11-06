@@ -16,6 +16,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.stream.Stream;
 
 public final class BasicConfigurationParser {
 
@@ -45,16 +46,17 @@ public final class BasicConfigurationParser {
     }
 
     private static BasicConfiguration.BasicConfigurationBuilder loadLocalConfigurationBuilder(String path) {
-        try {
-            PathMatcher pathMatcher = FileSystems.getDefault().getPathMatcher("glob:" + path);
-            List<Path> paths =
-                Files.find(Path.of(""), Integer.MAX_VALUE, (a, b) -> !b.isDirectory() && pathMatcher.matches(a))
-                    .toList();
+        PathMatcher pathMatcher = FileSystems.getDefault().getPathMatcher("glob:" + path);
+        try (Stream<Path> pathStream = Files.find(
+            Path.of(""),
+            Integer.MAX_VALUE,
+            (currentPath, fileAttributes) -> !fileAttributes.isDirectory() && pathMatcher.matches(currentPath)
+        )) {
             return BasicConfiguration.builder()
                 .isRemote(false)
-                .paths(paths.stream().map(Path::toString).toList());
+                .paths(pathStream.map(Path::toString).toList());
         } catch (IOException exception) {
-            throw new IllegalArgumentException("Paths not found: " + path);
+            throw new IllegalStateException("Cannot obtain files");
         }
     }
 
