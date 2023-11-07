@@ -3,6 +3,7 @@ package edu.hw5.task2;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.Month;
+import java.time.temporal.TemporalAdjuster;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,10 +27,16 @@ public final class Friday13Finder {
     }
 
     public static LocalDate getNextFridayThe13th(LocalDate date) {
-        LocalDate currentDate = date.with(TemporalAdjusters.next(DayOfWeek.FRIDAY));
-        while (currentDate.getDayOfMonth() != SEARCHING_DAY_OF_MONTH) {
-            currentDate = currentDate.with(TemporalAdjusters.next(DayOfWeek.FRIDAY));
-        }
-        return currentDate;
+        return date.with(Friday13Finder.nextFridayThe13th());
+    }
+
+    private static TemporalAdjuster nextFridayThe13th() {
+        return temporal -> {
+            LocalDate currentDate = LocalDate.from(temporal.with(TemporalAdjusters.next(DayOfWeek.FRIDAY)));
+            while (currentDate.getDayOfMonth() != SEARCHING_DAY_OF_MONTH) {
+                currentDate = currentDate.with(TemporalAdjusters.next(DayOfWeek.FRIDAY));
+            }
+            return currentDate;
+        };
     }
 }
