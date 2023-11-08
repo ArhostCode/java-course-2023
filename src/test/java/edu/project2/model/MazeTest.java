@@ -11,7 +11,7 @@ public class MazeTest {
     @Test
     @DisplayName("Тестирование Maze#create с верными входными данными")
     public void create_shouldReturnCorrectMaze() {
-        Maze maze = Maze.create(5, 5, createCells(5, 5));
+        Maze maze = new Maze(5, 5, createCells(5, 5));
         Assertions.assertThat(maze)
             .extracting("width", "height", "grid")
             .containsExactly(5, 5, createCells(5, 5));
@@ -20,21 +20,21 @@ public class MazeTest {
     @Test
     @DisplayName("Тестирование Maze#create с неверными размерами лабиринта")
     public void create_shouldThrowIllegalArgumentException_whenSizeIncorrect() {
-        Assertions.assertThatThrownBy(() -> Maze.create(1, 1, new Cell[][] {}))
+        Assertions.assertThatThrownBy(() -> new Maze(1, 1, new Cell[][] {}))
             .isInstanceOf(IllegalArgumentException.class).hasMessage("Maze data is not valid");
     }
 
     @Test
     @DisplayName("Тестирование Maze#create с неверными размерами сетки ячеек")
     public void create_shouldThrowIllegalArgumentException_whenGridSizeIncorrect() {
-        Assertions.assertThatThrownBy(() -> Maze.create(6, 6, createCells(5, 5)))
+        Assertions.assertThatThrownBy(() -> new Maze(6, 6, createCells(5, 5)))
             .isInstanceOf(IllegalArgumentException.class).hasMessage("Maze data is not valid");
     }
 
     @Test
     @DisplayName("Тестирование Maze#create с неверными размерами сетки ячеек")
     public void create_shouldThrowIllegalArgumentException_whenGridSizeIncorrect_2() {
-        Assertions.assertThatThrownBy(() -> Maze.create(4, 6, createCells(5, 6)))
+        Assertions.assertThatThrownBy(() -> new Maze(4, 6, createCells(5, 6)))
             .isInstanceOf(IllegalArgumentException.class).hasMessage("Maze data is not valid");
     }
 

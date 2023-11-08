@@ -5,6 +5,7 @@ import edu.project2.model.Maze;
 import edu.project2.model.Pair;
 
 public abstract class AbstractGenerator implements Generator {
+    private static final int MINIMAL_MAZE_SIZE = 5;
     protected static final int WALL_OFFSET = 2;
     protected static final int[][]
         NEIGHBOUR_PADDINGS = {{0, -WALL_OFFSET}, {-WALL_OFFSET, 0}, {WALL_OFFSET, 0}, {0, WALL_OFFSET}};
@@ -16,8 +17,7 @@ public abstract class AbstractGenerator implements Generator {
 
     @Override
     public Maze generate(int width, int height) {
-        final int minSize = 5;
-        if (width < minSize || height < minSize || width % 2 == 0 || height % 2 == 0) {
+        if (width < MINIMAL_MAZE_SIZE || height < MINIMAL_MAZE_SIZE || width % 2 == 0 || height % 2 == 0) {
             throw new IllegalArgumentException("Height and width must be greater than 4 and odd");
         }
         initializeGenerator(width, height);
@@ -26,12 +26,12 @@ public abstract class AbstractGenerator implements Generator {
     }
 
     protected void fillGridWalls() {
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
-                if (i == height - 1 || j == width - 1 || i % 2 == 0 || j % 2 == 0) {
-                    mazeGrid[i][j] = new Cell(j, i, Cell.Type.WALL);
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                if (y % 2 == 0 || x % 2 == 0) {
+                    mazeGrid[y][x] = new Cell(x, y, Cell.Type.WALL);
                 } else {
-                    mazeGrid[i][j] = new Cell(j, i, Cell.Type.PASSAGE);
+                    mazeGrid[y][x] = new Cell(x, y, Cell.Type.PASSAGE);
                 }
             }
         }
@@ -63,7 +63,7 @@ public abstract class AbstractGenerator implements Generator {
     }
 
     protected Maze createMaze() {
-        return Maze.create(width, height, mazeGrid);
+        return new Maze(width, height, mazeGrid);
     }
 
     protected boolean isInBound(int x, int y) {

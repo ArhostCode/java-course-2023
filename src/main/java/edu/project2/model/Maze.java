@@ -5,18 +5,13 @@ public final class Maze {
     private final int height;
     private final Cell[][] grid;
 
-    private Maze(int width, int height, Cell[][] grid) {
+    public Maze(int width, int height, Cell[][] grid) {
+        if (!isValid(grid) || width % 2 == 0 || height % 2 == 0) {
+            throw new IllegalArgumentException("Maze data is not valid");
+        }
         this.width = width;
         this.height = height;
         this.grid = grid;
-    }
-
-    public static Maze create(int width, int height, Cell[][] grid) {
-        Maze maze = new Maze(width, height, grid);
-        if (!maze.isValid() || width % 2 == 0 || height % 2 == 0) {
-            throw new IllegalArgumentException("Maze data is not valid");
-        }
-        return maze;
     }
 
     public int getWidth() {
@@ -31,7 +26,7 @@ public final class Maze {
         return grid;
     }
 
-    private boolean isValid() {
+    private boolean isValid(Cell[][] grid) {
         if (grid.length != height) {
             return false;
         }

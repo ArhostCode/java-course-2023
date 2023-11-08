@@ -3,8 +3,6 @@ package edu.project2.render;
 import edu.project2.model.Cell;
 import edu.project2.model.Coordinate;
 import edu.project2.model.Maze;
-import edu.project2.render.Renderer;
-import edu.project2.render.UnicodeRenderer;
 import java.util.ArrayList;
 import java.util.List;
 import org.assertj.core.api.Assertions;
@@ -51,7 +49,7 @@ public class UnicodeRendererTest {
                 cells[i][j] = new Cell(j, i, (i % 2 == 0) || (j % 2 == 0) ? Cell.Type.WALL : Cell.Type.PASSAGE);
             }
         }
-        return Maze.create(width, height, cells);
+        return new Maze(width, height, cells);
     }
 
 }

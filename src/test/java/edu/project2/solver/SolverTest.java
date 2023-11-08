@@ -26,7 +26,7 @@ public class SolverTest {
         cells[4][5] = new Cell(5, 4, Cell.Type.PASSAGE);
         cells[5][2] = new Cell(2, 5, Cell.Type.PASSAGE);
         cells[4][3] = new Cell(3, 4, Cell.Type.PASSAGE);
-        return Maze.create(7, 7, cells);
+        return new Maze(7, 7, cells);
     }
 
     protected boolean isPathValid(List<Coordinate> coordinates, Coordinate start, Coordinate end) {
