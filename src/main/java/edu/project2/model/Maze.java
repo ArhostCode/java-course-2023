@@ -6,7 +6,7 @@ public final class Maze {
     private final Cell[][] grid;
 
     public Maze(int width, int height, Cell[][] grid) {
-        if (!isValid(grid) || width % 2 == 0 || height % 2 == 0) {
+        if (!isValid(grid, width, height) || width % 2 == 0 || height % 2 == 0) {
             throw new IllegalArgumentException("Maze data is not valid");
         }
         this.width = width;
@@ -26,7 +26,7 @@ public final class Maze {
         return grid;
     }
 
-    private boolean isValid(Cell[][] grid) {
+    private boolean isValid(Cell[][] grid, int width, int height) {
         if (grid.length != height) {
             return false;
         }
