@@ -19,7 +19,7 @@ public class AnimalUtilsTest {
             Animal.builder().height(9).build()
         );
 
-        Assertions.assertThat(AnimalUtils.sortAnimalsByHeightMinToMax(given)).containsExactly(
+        Assertions.assertThat(AnimalUtils.sortAnimalsByHeight(given)).containsExactly(
             given.get(1),
             given.get(3),
             given.get(4),
@@ -39,7 +39,7 @@ public class AnimalUtilsTest {
             Animal.builder().weight(76).build()
         );
 
-        Assertions.assertThat(AnimalUtils.sortAnimalsByWeightMaxToMinAndTakeK(given, 3)).containsExactly(
+        Assertions.assertThat(AnimalUtils.sortAnimalsByWeightDescLimit(given, 3)).containsExactly(
             given.get(1),
             given.get(4),
             given.get(3)

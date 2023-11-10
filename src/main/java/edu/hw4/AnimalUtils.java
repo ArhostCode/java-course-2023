@@ -13,13 +13,13 @@ public final class AnimalUtils {
     private AnimalUtils() {
     }
 
-    public static List<Animal> sortAnimalsByHeightMinToMax(List<Animal> animals) {
+    public static List<Animal> sortAnimalsByHeight(List<Animal> animals) {
         return animals.stream()
             .sorted(Comparator.comparingInt(Animal::height))
             .toList();
     }
 
-    public static List<Animal> sortAnimalsByWeightMaxToMinAndTakeK(List<Animal> animals, int k) {
+    public static List<Animal> sortAnimalsByWeightDescLimit(List<Animal> animals, int k) {
         if (k <= 0 || k > animals.size()) {
             throw new IllegalArgumentException("k must be positive and <= list size");
         }
