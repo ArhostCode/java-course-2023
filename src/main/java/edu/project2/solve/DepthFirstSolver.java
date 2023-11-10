@@ -42,22 +42,16 @@ public class DepthFirstSolver implements Solver {
             answer.add(new Coordinate(currentX, currentY));
             return true;
         }
-        boolean isReachable = isReachableNext(currentX + 1, currentY, endX, endY)
-            || isReachableNext(currentX - 1, currentY, endX, endY)
-            || isReachableNext(currentX, currentY + 1, endX, endY)
-            || isReachableNext(currentX, currentY - 1, endX, endY);
+        boolean isReachable = isReachable(currentX + 1, currentY, endX, endY)
+            || isReachable(currentX - 1, currentY, endX, endY)
+            || isReachable(currentX, currentY + 1, endX, endY)
+            || isReachable(currentX, currentY - 1, endX, endY);
 
         if (isReachable) {
             answer.add(new Coordinate(currentX, currentY));
             return true;
         }
         return false;
-    }
-
-    private boolean isReachableNext(int nextX, int nextY, int endX, int endY) {
-        return isInBound(nextX, nextY)
-            && maze.getGrid()[nextY][nextX].type() != Cell.Type.WALL
-            && isReachable(nextX, nextY, endX, endY);
     }
 
     private boolean isInBound(int x, int y) {

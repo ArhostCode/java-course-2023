@@ -12,6 +12,8 @@ import java.util.Queue;
 
 public class BreadthFirstSolver implements Solver {
 
+    private static final int[][] NEIGHBOURS = {{1, 0}, {0, 1}, {-1, 0}, {0, -1}};
+
     private Maze maze;
     private boolean[][] visitedCells;
     private List<Coordinate> answer;
@@ -39,7 +41,6 @@ public class BreadthFirstSolver implements Solver {
 
         Queue<LinkedPositionElement> coordinates = new ArrayDeque<>();
         coordinates.offer(new LinkedPositionElement(null, current.x(), current.y()));
-        final int[][] neighbours = {{1, 0}, {0, 1}, {-1, 0}, {0, -1}};
 
         LinkedPositionElement solve = null;
 
@@ -50,7 +51,7 @@ public class BreadthFirstSolver implements Solver {
                 solve = coordinate;
                 break;
             }
-            for (int[] neighbour : neighbours) {
+            for (int[] neighbour : NEIGHBOURS) {
                 int newX = coordinate.x() + neighbour[0];
                 int newY = coordinate.y() + neighbour[1];
                 if (isNotWallAndBound(newX, newY) && !visitedCells[newY][newX]) {
