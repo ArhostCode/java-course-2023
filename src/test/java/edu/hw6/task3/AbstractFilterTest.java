@@ -9,6 +9,7 @@ import java.util.stream.StreamSupport;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import static edu.hw6.task3.AbstractFilter.globMatches;
 import static edu.hw6.task3.AbstractFilter.largerThan;
 import static edu.hw6.task3.AbstractFilter.magicNumber;
@@ -18,8 +19,8 @@ public class AbstractFilterTest {
 
     @Test
     @DisplayName("Тестирование AbstractFilter#largerThan")
-    public void largerThan_shouldReturnCorrectPaths() throws IOException {
-        List<Path> paths = prepareFiles();
+    public void largerThan_shouldReturnCorrectPaths(@TempDir Path tempDir) throws IOException {
+        List<Path> paths = prepareFiles(tempDir);
         DirectoryStream.Filter<Path> filter = largerThan(5);
 
         try (DirectoryStream<Path> entries = Files.newDirectoryStream(paths.get(0).getParent(), filter)) {
@@ -32,8 +33,8 @@ public class AbstractFilterTest {
 
     @Test
     @DisplayName("Тестирование AbstractFilter#magicNumber")
-    public void magicNumber_shouldReturnCorrectPaths() throws IOException {
-        List<Path> paths = prepareFiles();
+    public void magicNumber_shouldReturnCorrectPaths(@TempDir Path tempDir) throws IOException {
+        List<Path> paths = prepareFiles(tempDir);
         DirectoryStream.Filter<Path> filter = magicNumber(0x89, 'P', 'N', 'G');
 
         try (DirectoryStream<Path> entries = Files.newDirectoryStream(paths.get(0).getParent(), filter)) {
@@ -46,8 +47,8 @@ public class AbstractFilterTest {
 
     @Test
     @DisplayName("Тестирование AbstractFilter#globMatches")
-    public void globMatches_shouldReturnCorrectPaths() throws IOException {
-        List<Path> paths = prepareFiles();
+    public void globMatches_shouldReturnCorrectPaths(@TempDir Path tempDir) throws IOException {
+        List<Path> paths = prepareFiles(tempDir);
         DirectoryStream.Filter<Path> filter = globMatches("*.txt");
 
         try (DirectoryStream<Path> entries = Files.newDirectoryStream(paths.get(0).getParent(), filter)) {
@@ -61,8 +62,8 @@ public class AbstractFilterTest {
 
     @Test
     @DisplayName("Тестирование AbstractFilter#regexContains")
-    public void regexContains_shouldReturnCorrectPaths() throws IOException {
-        List<Path> paths = prepareFiles();
+    public void regexContains_shouldReturnCorrectPaths(@TempDir Path tempDir) throws IOException {
+        List<Path> paths = prepareFiles(tempDir);
         DirectoryStream.Filter<Path> filter = regexContains("g\\d");
 
         try (DirectoryStream<Path> entries = Files.newDirectoryStream(paths.get(0).getParent(), filter)) {
@@ -74,9 +75,7 @@ public class AbstractFilterTest {
         }
     }
 
-    private List<Path> prepareFiles() throws IOException {
-        Path directory = Files.createTempDirectory("test");
-        directory.toFile().deleteOnExit();
+    private List<Path> prepareFiles(Path directory) throws IOException {
         List<Path> files = List.of(
             Files.createTempFile(directory, "test", ".txt"),
             Files.createTempFile(directory, "kest", ".txt"),

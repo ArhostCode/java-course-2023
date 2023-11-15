@@ -15,16 +15,25 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @Getter
-@RequiredArgsConstructor
 public class DiskMap implements Map<String, String> {
 
     private final Path path;
+
+    public DiskMap(Path path) {
+        this.path = path;
+        if (!Files.exists(path)) {
+            try {
+                Files.createFile(path);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
 
     public void loadFromFile(Path path) {
         clear();
@@ -84,19 +93,20 @@ public class DiskMap implements Map<String, String> {
             throw new IllegalArgumentException("Key or value must be not null");
         }
         var entrySet = entrySet();
-        var currentEntry = entrySet.stream()
-            .filter(entry -> entry.getKey().equals(key))
-            .findFirst()
-            .orElse(null);
+        var currentEntry = getEntryByKey(key, entrySet);
         if (currentEntry != null) {
-            remove(key);
+            String oldValue = currentEntry.getValue();
+            currentEntry.setValue(value);
+            writeAllLines(path, entrySet.stream().map(entry -> entry.getKey() + ":" + entry.getValue()).toList());
+            return oldValue;
+        } else {
+            try {
+                Files.writeString(path, (key + ":" + value + "\n"), StandardOpenOption.APPEND);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            return null;
         }
-        try {
-            Files.writeString(path, (key + ":" + value + "\n"), StandardOpenOption.APPEND);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return currentEntry == null ? null : currentEntry.getValue();
     }
 
     @Override
@@ -105,10 +115,7 @@ public class DiskMap implements Map<String, String> {
             throw new IllegalArgumentException("Key must be not null");
         }
         var entrySet = entrySet();
-        var currentEntry = entrySet.stream()
-            .filter(entry -> entry.getKey().equals(key))
-            .findFirst()
-            .orElse(null);
+        var currentEntry = getEntryByKey(key, entrySet);
         if (currentEntry != null) {
             writeAllLines(path, entrySet.stream()
                 .filter(entry -> !entry.getKey().equals(key))
@@ -117,14 +124,6 @@ public class DiskMap implements Map<String, String> {
             return currentEntry.getValue();
         }
         return null;
-    }
-
-    private void writeAllLines(Path path, List<String> lines) {
-        try {
-            Files.write(path, lines, StandardCharsets.UTF_8, StandardOpenOption.TRUNCATE_EXISTING);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     @Override
@@ -179,6 +178,21 @@ public class DiskMap implements Map<String, String> {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void writeAllLines(Path path, List<String> lines) {
+        try {
+            Files.write(path, lines, StandardCharsets.UTF_8, StandardOpenOption.TRUNCATE_EXISTING);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private Entry<String, String> getEntryByKey(Object key, Set<Entry<String, String>> entrySet) {
+        return entrySet.stream()
+            .filter(entry -> entry.getKey().equals(key))
+            .findFirst()
+            .orElse(null);
     }
 
     @Getter
