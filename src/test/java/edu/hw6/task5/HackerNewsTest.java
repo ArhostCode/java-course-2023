@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 public class HackerNewsTest {
 
     @Test
-    @DisplayName("Тестирование HackerNews#hackerNewsTopStories (тест может упасть при изменениях на сервере)")
+    @DisplayName("Тестирование HackerNews#hackerNewsTopStories (тест может упасть при изменениях api на сервере)")
     public void hackerNewsTopStories_shouldReturnTopStories() {
         long[] topStories = HackerNews.hackerNewsTopStories();
         Assertions.assertThat(topStories)
