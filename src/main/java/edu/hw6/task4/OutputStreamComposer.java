@@ -16,7 +16,8 @@ public final class OutputStreamComposer {
     }
 
     public static void write(Path path) {
-        try (OutputStream outputStream = Files.newOutputStream(path)) {
+        try {
+            OutputStream outputStream = Files.newOutputStream(path);
             CheckedOutputStream checkedOutputStream = new CheckedOutputStream(outputStream, new Adler32());
             BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(checkedOutputStream);
             OutputStreamWriter outputStreamWriter =
@@ -24,6 +25,7 @@ public final class OutputStreamComposer {
             PrintWriter printWriter = new PrintWriter(outputStreamWriter);
             printWriter.print("Programming is learned by writing programs. ― Brian Kernighan");
             printWriter.flush();
+            printWriter.close(); // Close by chain all streams
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
