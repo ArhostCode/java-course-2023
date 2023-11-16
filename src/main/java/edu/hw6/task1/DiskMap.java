@@ -56,12 +56,16 @@ public class DiskMap implements Map<String, String> {
 
     @Override
     public int size() {
-        return entrySet().size();
+        try {
+            return Files.readAllLines(path).size();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public boolean isEmpty() {
-        return entrySet().isEmpty();
+        return size() == 0;
     }
 
     @Override
@@ -128,16 +132,7 @@ public class DiskMap implements Map<String, String> {
 
     @Override
     public void putAll(@NotNull Map<? extends String, ? extends String> m) {
-        try {
-            Files.write(path, m.entrySet()
-                    .stream()
-                    .map(entry -> entry.getKey() + ":" + entry.getValue())
-                    .toList(),
-                StandardCharsets.UTF_8, StandardOpenOption.APPEND
-            );
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        m.forEach(this::put);
     }
 
     @Override
