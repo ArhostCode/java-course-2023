@@ -12,10 +12,13 @@ import java.util.regex.Pattern;
 
 public class BaseNginxLogParser implements NginxLogParser {
 
-    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern(
         "dd/LLL/yyyy:HH:mm:ss ZZ",
         Locale.US
     );
+
+    private static final Pattern LOG_PATTERN =
+        Pattern.compile("(.*) - (.*) \\[(.*)\\] \"(.*) (.*) (.*)\" (\\d+) (\\d+) \"(.*)\" \"(.*)\"");
 
     @Override
     public List<NginxLog> parse(List<String> lines) {
@@ -24,7 +27,7 @@ public class BaseNginxLogParser implements NginxLogParser {
 
     @SuppressWarnings("checkstyle:MagicNumber")
     private NginxLog parseLine(String line) {
-        Matcher matcher = Pattern.compile("(.*) - (.*) \\[(.*)\\] \"(.*) (.*) (.*)\" (\\d+) (\\d+) \"(.*)\" \"(.*)\"")
+        Matcher matcher = LOG_PATTERN
             .matcher(line);
         if (!matcher.matches()) {
             throw new IllegalStateException("Log " + line + " is invalid");
@@ -46,7 +49,7 @@ public class BaseNginxLogParser implements NginxLogParser {
                 .code(Integer.parseInt(matcher.group(7)))
                 .bytesSend(Integer.parseInt(matcher.group(8)))
                 .build())
-            .timeStamp(OffsetDateTime.parse(matcher.group(3), dateTimeFormatter))
+            .timeStamp(OffsetDateTime.parse(matcher.group(3), DATE_TIME_FORMATTER))
             .build();
     }
 }
