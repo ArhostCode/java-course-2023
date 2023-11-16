@@ -25,7 +25,7 @@ public class AbstractFilterTest {
 
         try (DirectoryStream<Path> entries = Files.newDirectoryStream(paths.get(0).getParent(), filter)) {
             List<Path> resolvedPaths = StreamSupport.stream(entries.spliterator(), false).toList();
-            Assertions.assertThat(resolvedPaths).containsExactly(paths.get(0));
+            Assertions.assertThat(resolvedPaths).containsExactlyInAnyOrder(paths.get(0));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -39,7 +39,7 @@ public class AbstractFilterTest {
 
         try (DirectoryStream<Path> entries = Files.newDirectoryStream(paths.get(0).getParent(), filter)) {
             List<Path> resolvedPaths = StreamSupport.stream(entries.spliterator(), false).toList();
-            Assertions.assertThat(resolvedPaths).containsExactly(paths.get(4), paths.get(5));
+            Assertions.assertThat(resolvedPaths).containsExactlyInAnyOrder(paths.get(4), paths.get(5));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
