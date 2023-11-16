@@ -132,7 +132,18 @@ public class DiskMap implements Map<String, String> {
 
     @Override
     public void putAll(@NotNull Map<? extends String, ? extends String> m) {
-        m.forEach(this::put);
+        var map = entrySet().stream().collect(Collectors.toMap(Entry::getKey, Entry::getValue));
+        map.putAll(m);
+        try {
+            Files.write(
+                path,
+                map.entrySet().stream().map(entry -> entry.getKey() + ":" + entry.getValue()).toList(),
+                StandardCharsets.UTF_8,
+                StandardOpenOption.TRUNCATE_EXISTING
+            );
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
