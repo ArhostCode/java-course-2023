@@ -16,8 +16,7 @@ public final class OutputStreamComposer {
     }
 
     public static void write(Path path) {
-        try {
-            OutputStream outputStream = Files.newOutputStream(path);
+        try (OutputStream outputStream = Files.newOutputStream(path)) {
             CheckedOutputStream checkedOutputStream = new CheckedOutputStream(outputStream, new Adler32());
             BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(checkedOutputStream);
             OutputStreamWriter outputStreamWriter =
