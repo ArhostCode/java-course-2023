@@ -1,6 +1,5 @@
-package edu.project4.processor;
+package edu.project4.action.processor;
 
-import edu.project4.model.action.ImageProcessor;
 import edu.project4.model.image.FractalImage;
 import edu.project4.model.image.Pixel;
 
@@ -23,9 +22,9 @@ public class LogGammaCorrectionImageProcessor implements ImageProcessor {
             for (int x = 0; x < image.width(); x++) {
                 Pixel pixel = image.pixel(x, y);
                 pixel.setNormal(image.pixel(x, y).getNormal() / max);
-                pixel.setR((int) (pixel.getR() * Math.pow(pixel.getNormal(), (1.0 / gamma))));
-                pixel.setG((int) (pixel.getG() * Math.pow(pixel.getNormal(), (1.0 / gamma))));
-                pixel.setB((int) (pixel.getB() * Math.pow(pixel.getNormal(), (1.0 / gamma))));
+                pixel.setRed((int) (pixel.getRed() * Math.pow(pixel.getNormal(), (1.0 / gamma))));
+                pixel.setGreen((int) (pixel.getGreen() * Math.pow(pixel.getNormal(), (1.0 / gamma))));
+                pixel.setBlue((int) (pixel.getBlue() * Math.pow(pixel.getNormal(), (1.0 / gamma))));
             }
         }
 

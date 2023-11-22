@@ -1,6 +1,5 @@
-package edu.project4.model.saver;
+package edu.project4.action.saver;
 
-import edu.project4.model.action.ImageSaver;
 import edu.project4.model.image.FractalImage;
 import edu.project4.model.image.Pixel;
 import java.awt.Color;
@@ -16,7 +15,7 @@ public class PngImageSaver implements ImageSaver {
         for (int y = 0; y < image.height(); y++) {
             for (int x = 0; x < image.width(); x++) {
                 Pixel pixel = image.pixel(x, y);
-                Color color = new Color(pixel.getR(), pixel.getG(), pixel.getB());
+                Color color = new Color(pixel.getRed(), pixel.getGreen(), pixel.getBlue());
                 png.setRGB(x, y, color.getRGB());
             }
         }

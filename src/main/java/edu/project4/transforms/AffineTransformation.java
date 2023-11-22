@@ -15,7 +15,6 @@ public class AffineTransformation implements Transformation {
     public Point apply(Point point) {
         double x = affineCoefficient.a() + point.x() * affineCoefficient.b() + point.y() * affineCoefficient.c();
         double y = affineCoefficient.d() + point.x() * affineCoefficient.e() + point.y() * affineCoefficient.f();
-//        System.out.println(x + " " + y);
         return new Point(x, y);
     }
 }

@@ -15,7 +15,7 @@ public record FractalImage(Pixel[] data, int width, int height) {
         return x >= 0 && x < width && y >= 0 && y < height;
     }
 
-    public synchronized Pixel pixel(int x, int y) {
+    public Pixel pixel(int x, int y) {
         if (!contains(x, y)) {
             return null;
         }
