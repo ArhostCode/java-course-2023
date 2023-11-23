@@ -8,7 +8,8 @@ public interface PersonDatabase {
 
     void delete(int id);
 
-    @Nullable List<Person> findByName(String name);
+    @Nullable
+    List<Person> findByName(String name);
 
     @Nullable
     List<Person> findByAddress(String address);
