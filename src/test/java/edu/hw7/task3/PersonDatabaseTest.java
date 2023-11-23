@@ -3,6 +3,7 @@ package edu.hw7.task3;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import lombok.SneakyThrows;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -19,9 +20,9 @@ public class PersonDatabaseTest {
     }
 
     @Test
-    @DisplayName("Тестирование CachingPersonDatabase")
+    @DisplayName("Тестирование SynchronizedCachingPersonDatabase")
     public void synchronizedDatabase_shouldReturnCorrectPerson_whenPersonAdded() {
-        PersonDatabase personDatabase = new CachingPersonDatabase() {
+        PersonDatabase personDatabase = new SynchronizedCachingPersonDatabase() {
             @SneakyThrows
             @Override
             public synchronized void add(Person person) {
@@ -42,6 +43,7 @@ public class PersonDatabaseTest {
         Future<List<Person>> futureByName = executorService.submit(() -> personDatabase.findByName("Ivan"));
         Future<List<Person>> futureByAddress = executorService.submit(() -> personDatabase.findByAddress("Moscow"));
         executorService.shutdown();
+        executorService.awaitTermination(Integer.MAX_VALUE, TimeUnit.SECONDS);
         assertAll(
             () -> Assertions.assertThat(futureByPhone.get()).contains(person),
             () -> Assertions.assertThat(futureByName.get()).contains(person),

@@ -4,7 +4,7 @@ import java.util.List;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.Nullable;
 
-public class CachingPersonDatabase extends AbstractPersonDatabase {
+public class SynchronizedCachingPersonDatabase extends AbstractPersonDatabase {
 
     @SneakyThrows
     @Override
