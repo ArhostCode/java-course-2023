@@ -29,9 +29,9 @@ public class AbstractPersonDatabase implements PersonDatabase {
         if (removed == null) {
             return;
         }
-        cachedNames.remove(removed.name());
-        cachedAddresses.remove(removed.address());
-        cachedPhones.remove(removed.phoneNumber());
+        cachedNames.get(removed.name()).remove(removed);
+        cachedAddresses.get(removed.address()).remove(removed);
+        cachedPhones.get(removed.phoneNumber()).remove(removed);
     }
 
     @Override
