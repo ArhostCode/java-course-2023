@@ -54,7 +54,7 @@ public class AbstractFilterTest {
         try (DirectoryStream<Path> entries = Files.newDirectoryStream(paths.get(0).getParent(), filter)) {
             List<Path> resolvedPaths = StreamSupport.stream(entries.spliterator(), false).toList();
             Assertions.assertThat(resolvedPaths)
-                .containsExactlyInAnyOrder(paths.get(0), paths.get(1), paths.get(2), paths.get(3));
+                .containsExactlyInAnyOrder(paths.get(0), paths.get(1), paths.get(2), paths.get(3), paths.get(6));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -69,7 +69,25 @@ public class AbstractFilterTest {
         try (DirectoryStream<Path> entries = Files.newDirectoryStream(paths.get(0).getParent(), filter)) {
             List<Path> resolvedPaths = StreamSupport.stream(entries.spliterator(), false).toList();
             Assertions.assertThat(resolvedPaths)
-                .containsExactlyInAnyOrder(paths.get(4), paths.get(5));
+                .containsExactlyInAnyOrder(paths.get(4), paths.get(5), paths.get(6));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Test
+    @DisplayName("Тестирование AbstractFilter цепочки фильтров")
+    public void manyFilters_shouldReturnCorrectPaths(@TempDir Path tempDir) throws IOException {
+        List<Path> paths = prepareFiles(tempDir);
+        DirectoryStream.Filter<Path> filter =
+            regexContains("g\\d")
+                .and(magicNumber(0x89, 'P', 'N', 'G'))
+                .and(globMatches("g*j*"));
+
+        try (DirectoryStream<Path> entries = Files.newDirectoryStream(paths.get(0).getParent(), filter)) {
+            List<Path> resolvedPaths = StreamSupport.stream(entries.spliterator(), false).toList();
+            Assertions.assertThat(resolvedPaths)
+                .containsExactlyInAnyOrder(paths.get(5));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -82,7 +100,8 @@ public class AbstractFilterTest {
             Files.createTempFile(directory, "k-st", ".txt"),
             Files.createTempFile(directory, "gor", ".txt"),
             Files.createTempFile(directory, "g1", ".png"),
-            Files.createTempFile(directory, "g2", ".png")
+            Files.createTempFile(directory, "g2j", ".png"),
+            Files.createTempFile(directory, "g3j", ".txt")
         );
         files.forEach(path -> {
             path.toFile().deleteOnExit();

@@ -13,15 +13,15 @@ public final class FileCloneUtils {
         String dirName = path.getParent().toString();
         String fileName = path.getFileName().toString();
 
-        int pointIndex = fileName.indexOf(".");
+        int pointIndex = fileName.indexOf(".", 1);
         pointIndex = pointIndex == -1 ? fileName.length() : pointIndex;
         String baseFileName = fileName.substring(0, pointIndex);
-        String extension = fileName.substring(Math.min(pointIndex + 1, fileName.length()));
+        String extensions = fileName.substring(Math.min(pointIndex + 1, fileName.length()));
 
-        Path copyPath = Path.of(dirName, baseFileName + " — копия." + extension);
+        Path copyPath = Path.of(dirName, baseFileName + " — копия." + extensions);
         int currentId = 2;
         while (Files.exists(copyPath)) {
-            copyPath = Paths.get(dirName, "%s — копия (%d).%s".formatted(baseFileName, currentId, extension));
+            copyPath = Paths.get(dirName, "%s — копия (%d).%s".formatted(baseFileName, currentId, extensions));
             currentId++;
         }
 

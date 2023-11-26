@@ -7,7 +7,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -48,10 +47,7 @@ public class DiskMap implements Map<String, String> {
     }
 
     public void saveToFile(Path path) {
-        writeAllLines(path, entrySet().stream()
-            .map(entry -> entry.getKey() + ":" + entry.getValue())
-            .collect(Collectors.toList())
-        );
+        writeAllLines(path, entrySet());
     }
 
     @Override
@@ -83,11 +79,10 @@ public class DiskMap implements Map<String, String> {
         if (key == null) {
             throw new IllegalArgumentException("Getting key must be not null");
         }
-        Entry<String, String> currentEntry = entrySet().stream()
+        var currentEntry = entrySet().stream()
             .filter(entry -> entry.getKey().equals(key))
-            .findFirst()
-            .orElse(null);
-        return currentEntry == null ? null : currentEntry.getValue();
+            .findFirst();
+        return currentEntry.map(Entry::getValue).orElse(null);
     }
 
     @Nullable
@@ -101,7 +96,7 @@ public class DiskMap implements Map<String, String> {
         if (currentEntry != null) {
             String oldValue = currentEntry.getValue();
             currentEntry.setValue(value);
-            writeAllLines(path, entrySet.stream().map(entry -> entry.getKey() + ":" + entry.getValue()).toList());
+            writeAllLines(path, entrySet);
             return oldValue;
         } else {
             try {
@@ -123,8 +118,7 @@ public class DiskMap implements Map<String, String> {
         if (currentEntry != null) {
             writeAllLines(path, entrySet.stream()
                 .filter(entry -> !entry.getKey().equals(key))
-                .map(entry -> entry.getKey() + ":" + entry.getValue())
-                .toList());
+                .collect(Collectors.toSet()));
             return currentEntry.getValue();
         }
         return null;
@@ -186,9 +180,14 @@ public class DiskMap implements Map<String, String> {
         }
     }
 
-    private void writeAllLines(Path path, List<String> lines) {
+    private void writeAllLines(Path path, Set<Entry<String, String>> entrySet) {
         try {
-            Files.write(path, lines, StandardCharsets.UTF_8, StandardOpenOption.TRUNCATE_EXISTING);
+            Files.write(
+                path,
+                entrySet.stream().map(entry -> entry.getKey() + ":" + entry.getValue()).toList(),
+                StandardCharsets.UTF_8,
+                StandardOpenOption.TRUNCATE_EXISTING
+            );
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
