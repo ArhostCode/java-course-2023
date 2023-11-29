@@ -1,7 +1,6 @@
 package edu.hw7.task4;
 
 import java.util.Random;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ThreadLocalRandom;
@@ -26,15 +25,9 @@ public class MonteCarloPiComputer {
 
         // Not using atomics here to speed up the process
         Future<Long>[] futures = new Future[threadCount];
-        CountDownLatch countDownLatch = new CountDownLatch(threadCount);
         for (int thread = 0; thread < threadCount; thread++) {
-            futures[thread] = executorService.submit(() -> {
-                long countInThread = countRandomCollisions(n / threadCount);
-                countDownLatch.countDown();
-                return countInThread;
-            });
+            futures[thread] = executorService.submit(() -> countRandomCollisions(n / threadCount));
         }
-        countDownLatch.await();
         for (int i = 0; i < threadCount; i++) {
             count += futures[i].get();
         }

@@ -37,28 +37,26 @@ public class AbstractPersonDatabase implements PersonDatabase {
     @Override
     @Nullable
     public List<Person> findByName(String name) {
-        if (!cachedNames.containsKey(name)) {
-            return null;
-        }
-        return cachedNames.get(name).stream().toList();
+        return getFromCache(cachedNames, name);
     }
 
     @Override
     @Nullable
     public List<Person> findByAddress(String address) {
-        if (!cachedAddresses.containsKey(address)) {
-            return null;
-        }
-        return cachedAddresses.get(address).stream().toList();
+        return getFromCache(cachedAddresses, address);
     }
 
     @Override
     @Nullable
     public List<Person> findByPhone(String phone) {
-        if (!cachedPhones.containsKey(phone)) {
+        return getFromCache(cachedPhones, phone);
+    }
+
+    private List<Person> getFromCache(Map<String, List<Person>> cache, String key) {
+        if (!cache.containsKey(key)) {
             return null;
         }
-        return cachedPhones.get(phone).stream().toList();
+        return cache.get(key);
     }
 
 }
