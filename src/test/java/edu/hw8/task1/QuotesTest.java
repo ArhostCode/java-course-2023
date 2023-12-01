@@ -1,12 +1,12 @@
 package edu.hw8.task1;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Executors;
 import lombok.SneakyThrows;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.Executors;
 
 public class QuotesTest {
 
@@ -25,11 +25,17 @@ public class QuotesTest {
         Thread.sleep(1000);
         quotesClient.start();
         serverResponses.add(quotesClient.requestQuote("личности"));
+        serverResponses.add(quotesClient.requestQuote("оскорбления"));
+
+        Thread.sleep(1000);
         quotesServer.stop();
         quotesClient.close();
 
-        Assertions.assertThat(userRequests).containsExactly("личности");
-        Assertions.assertThat(serverResponses).containsExactly("Не переходи на личности там, где их нет");
+        Assertions.assertThat(userRequests).containsExactly("личности", "оскорбления");
+        Assertions.assertThat(serverResponses).containsExactly(
+            "Не переходи на личности там, где их нет",
+            "Если твои противники перешли на личные оскорбления, будь уверена — твоя победа не за горами"
+        );
     }
 
 }

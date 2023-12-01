@@ -20,6 +20,7 @@ public class QuotesClient {
     @SneakyThrows
     public void start() {
         clientChannel = SocketChannel.open(new InetSocketAddress(address, port));
+        clientChannel.configureBlocking(false);
     }
 
     @SneakyThrows
@@ -31,11 +32,15 @@ public class QuotesClient {
     @SneakyThrows
     private String readFromServer() {
         buffer.clear();
-        clientChannel.read(buffer);
-        buffer.flip();
-        byte[] bytes = new byte[buffer.remaining()];
-        buffer.get(bytes);
-        return new String(bytes, StandardCharsets.UTF_8);
+        StringBuilder answer = new StringBuilder();
+        while (clientChannel.read(buffer) > 0 || answer.isEmpty()) {
+            buffer.flip();
+            byte[] bytes = new byte[buffer.remaining()];
+            buffer.get(bytes);
+            answer.append(new String(bytes, StandardCharsets.UTF_8));
+            buffer.clear();
+        }
+        return answer.toString();
     }
 
     @SneakyThrows

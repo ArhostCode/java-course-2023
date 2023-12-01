@@ -1,9 +1,11 @@
 package edu.hw8.task1;
 
 import java.net.InetSocketAddress;
-import java.net.ServerSocket;
+import java.nio.channels.SelectionKey;
+import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
+import java.util.Iterator;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
@@ -19,7 +21,7 @@ public class QuotesServer {
     private final ExecutorService executorService;
     private final Semaphore parallelConnectionSemaphore;
     private Consumer<String> messageConsumer;
-    private ServerSocket serverSocket;
+    private ServerSocketChannel serverSocketChannel;
 
     public QuotesServer(int port, QuotesStorage quotesStorage, int parallelConnections) {
         this.port = port;
@@ -32,11 +34,26 @@ public class QuotesServer {
     @SneakyThrows
     public void start() {
         try (ServerSocketChannel channel = ServerSocketChannel.open()) {
-            serverSocket = channel.socket();
-            serverSocket.bind(new InetSocketAddress(port));
-            while (channel.isOpen()) {
-                if (parallelConnectionSemaphore.tryAcquire()) {
-                    accept(channel);
+            serverSocketChannel = channel;
+            Selector selector = Selector.open();
+            channel.configureBlocking(false);
+            channel.register(selector, SelectionKey.OP_ACCEPT);
+            channel.bind(new InetSocketAddress(port));
+            processConnections(channel, selector);
+        }
+    }
+
+    @SneakyThrows
+    private void processConnections(ServerSocketChannel channel, Selector selector) {
+        while (channel.isOpen()) {
+            if (selector.selectNow() > 0) {
+                Iterator<SelectionKey> iterator = selector.selectedKeys().iterator();
+                while (iterator.hasNext()) {
+                    SelectionKey key = iterator.next();
+                    if (key.isAcceptable() && parallelConnectionSemaphore.tryAcquire()) {
+                        accept(channel);
+                        iterator.remove();
+                    }
                 }
             }
         }
@@ -53,8 +70,8 @@ public class QuotesServer {
 
     @SneakyThrows
     public void stop() {
+        serverSocketChannel.close();
         executorService.shutdownNow();
-        serverSocket.close();
     }
 
     public void setMessageConsumer(Consumer<String> messageConsumer) {

@@ -1,8 +1,11 @@
 package edu.hw8.task1;
 
 import java.nio.ByteBuffer;
+import java.nio.channels.SelectionKey;
+import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
 import java.nio.charset.StandardCharsets;
+import java.util.Iterator;
 import java.util.function.Consumer;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -18,15 +21,27 @@ public class QuotesServerWorker implements Runnable {
 
     @SneakyThrows @Override
     public void run() {
+        Selector selector = Selector.open();
+        clientChannel.configureBlocking(false);
+        clientChannel.register(selector, SelectionKey.OP_READ);
         while (clientChannel.isConnected()) {
-            String message = readMessageFromClient();
-            if (message == null) {
-                break;
+            if (selector.selectNow() > 0) {
+                Iterator<SelectionKey> iterator = selector.selectedKeys().iterator();
+                while (iterator.hasNext()) {
+                    SelectionKey key = iterator.next();
+                    if (key.isReadable()) {
+                        String message = readMessageFromClient();
+                        if (message == null) {
+                            break;
+                        }
+                        if (messageConsumer != null) {
+                            messageConsumer.accept(message);
+                        }
+                        writeMessageToClient(quotesStorage.getQuote(message));
+                    }
+                    iterator.remove();
+                }
             }
-            if (messageConsumer != null) {
-                messageConsumer.accept(message);
-            }
-            writeMessageToClient(quotesStorage.getQuote(message));
         }
         if (after != null) {
             after.run();
@@ -36,15 +51,20 @@ public class QuotesServerWorker implements Runnable {
     @SneakyThrows
     private String readMessageFromClient() {
         try {
+            StringBuilder message = new StringBuilder();
             int read = clientChannel.read(byteBuffer);
             if (read <= 0) {
                 return null;
             }
-            byteBuffer.flip();
-            byte[] bytesArray = new byte[byteBuffer.remaining()];
-            byteBuffer.get(bytesArray);
-            byteBuffer.clear();
-            return new String(bytesArray, StandardCharsets.UTF_8);
+            while (read > 0) {
+                byteBuffer.flip();
+                byte[] bytesArray = new byte[byteBuffer.remaining()];
+                byteBuffer.get(bytesArray);
+                message.append(new String(bytesArray, StandardCharsets.UTF_8));
+                byteBuffer.clear();
+                read = clientChannel.read(byteBuffer);
+            }
+            return message.toString();
         } catch (Exception e) {
             return null;
         }
