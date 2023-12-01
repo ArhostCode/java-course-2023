@@ -20,8 +20,7 @@ public class StatsCollector {
     public void push(String metricName, double... values) {
         counter.incrementAndGet();
         executorService.execute(() -> {
-            MetricInput metricInput = new MetricInput(metricName, values);
-            metrics.add(collect(metricInput));
+            metrics.add(collect(metricName, values));
             counter.decrementAndGet();
         });
     }
@@ -33,15 +32,15 @@ public class StatsCollector {
         return metrics;
     }
 
-    private Metric collect(MetricInput metricInput) {
+    private Metric collect(String metricName, double... values) {
         return new Metric(
-            metricInput.name(),
-            Arrays.stream(metricInput.values()).sum(),
-            Arrays.stream(metricInput.values()).average()
+            metricName,
+            Arrays.stream(values).sum(),
+            Arrays.stream(values).average()
                 .orElseThrow(() -> new RuntimeException("No values in metric")),
             // Checks next no necessary, because first thrown exception
-            Arrays.stream(metricInput.values()).min().orElseThrow(),
-            Arrays.stream(metricInput.values()).max().orElseThrow()
+            Arrays.stream(values).min().orElseThrow(),
+            Arrays.stream(values).max().orElseThrow()
         );
     }
 
