@@ -1,7 +1,7 @@
 package edu.hw8.task2;
 
-import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import lombok.SneakyThrows;
@@ -20,7 +20,7 @@ public final class FixedThreadPool implements ThreadPool {
         }
         this.poolSize = poolSize;
         this.workers = new FixedThreadPoolWorker[poolSize];
-        runnableBlockingQueue = new ArrayBlockingQueue<>(poolSize);
+        runnableBlockingQueue = new LinkedBlockingQueue<>();
     }
 
     public static FixedThreadPool create(int poolSize) {
