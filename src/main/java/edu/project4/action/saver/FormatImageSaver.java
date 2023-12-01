@@ -4,16 +4,17 @@ import edu.project4.model.image.FractalImage;
 import edu.project4.model.image.Pixel;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.nio.file.Path;
 import javax.imageio.ImageIO;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 
 @RequiredArgsConstructor
 public class FormatImageSaver implements ImageSaver {
 
     private final ImageFormat format;
 
+    @SneakyThrows
     @Override
     public void save(FractalImage image, Path path) {
         BufferedImage renderedImage = new BufferedImage(image.width(), image.height(), BufferedImage.TYPE_INT_RGB);
@@ -24,10 +25,6 @@ public class FormatImageSaver implements ImageSaver {
                 renderedImage.setRGB(x, y, color.getRGB());
             }
         }
-        try {
-            ImageIO.write(renderedImage, format.getFormatName(), path.toFile());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        ImageIO.write(renderedImage, format.getFormatName(), path.toFile());
     }
 }
