@@ -2,15 +2,9 @@ package edu.project4.model.image;
 
 import java.awt.Color;
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.Data;
 
-@Setter
-@Getter
-@ToString
-@EqualsAndHashCode
+@Data
 @AllArgsConstructor
 public class Pixel {
     private int red;

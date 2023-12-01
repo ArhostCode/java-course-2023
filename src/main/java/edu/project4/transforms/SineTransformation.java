@@ -4,7 +4,7 @@ import edu.project4.model.world.Point;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class SineTransformation implements Transformation {
-    private double weight = ThreadLocalRandom.current().nextDouble() * 3;
+    private final double weight = ThreadLocalRandom.current().nextDouble() * 2;
 
     @Override
     public Point apply(Point point) {

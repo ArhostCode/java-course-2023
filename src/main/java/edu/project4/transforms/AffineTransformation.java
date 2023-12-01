@@ -2,14 +2,8 @@ package edu.project4.transforms;
 
 import edu.project4.model.AffineCoefficient;
 import edu.project4.model.world.Point;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
-@Getter
-@RequiredArgsConstructor
-public class AffineTransformation implements Transformation {
-
-    private final AffineCoefficient affineCoefficient;
+public record AffineTransformation(AffineCoefficient affineCoefficient) implements Transformation {
 
     @Override
     public Point apply(Point point) {

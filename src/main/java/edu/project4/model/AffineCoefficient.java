@@ -4,6 +4,9 @@ import java.awt.Color;
 import java.util.Random;
 
 public record AffineCoefficient(double a, double b, double c, double d, double e, double f, Color color) {
+
+    private static final int MAX_COLOR_RANGE = 255;
+
     public static AffineCoefficient generateRandom(Random random) {
         double a = random.nextDouble(-1, 1);
         double b = random.nextDouble(-1, 1);
@@ -22,7 +25,7 @@ public record AffineCoefficient(double a, double b, double c, double d, double e
         }
         return new AffineCoefficient(
             a, b, c, d, e, f,
-            new Color(random.nextInt(255), random.nextInt(255), random.nextInt(255))
+            new Color(random.nextInt(MAX_COLOR_RANGE), random.nextInt(MAX_COLOR_RANGE), random.nextInt(MAX_COLOR_RANGE))
         );
     }
 

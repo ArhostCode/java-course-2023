@@ -4,10 +4,12 @@ import edu.project4.model.image.FractalImage;
 import edu.project4.model.image.Pixel;
 
 public class LogGammaCorrectionImageProcessor implements ImageProcessor {
+    private static final double GAMMA = 1.5;
+
     @Override
     public void process(FractalImage image) {
         double max = 0.0;
-        double gamma = 1.5; //2.2
+        double gamma = GAMMA; //2.2
         for (int y = 0; y < image.height(); y++) {
             for (int x = 0; x < image.width(); x++) {
                 if (image.pixel(x, y).getHitCount() != 0) {

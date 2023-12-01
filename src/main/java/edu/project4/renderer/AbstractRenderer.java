@@ -74,7 +74,7 @@ public abstract class AbstractRenderer implements Renderer {
         Pixel pixel = FractalImageUtils.resolvePixel(world, point, image);
         if (pixel != null) {
             synchronized (pixel) {
-                Color color = affine.getAffineCoefficient().color();
+                Color color = affine.affineCoefficient().color();
                 pixel.saturateHitCount(color);
             }
         }

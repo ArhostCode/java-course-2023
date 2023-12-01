@@ -4,7 +4,6 @@ import edu.project4.model.image.FractalImage;
 import edu.project4.model.world.Rect;
 import edu.project4.transforms.AffineTransformation;
 import edu.project4.transforms.Transformation;
-
 import java.util.List;
 
 public class OneThreadRenderer extends AbstractRenderer {

@@ -10,7 +10,10 @@ public final class RectUtils {
     }
 
     public static Point randomPoint(Rect rect) {
-        return new Point(rect.x() + ThreadLocalRandom.current().nextDouble() * rect.width(), rect.y() + Math.random() * rect.height());
+        return new Point(
+            rect.x() + ThreadLocalRandom.current().nextDouble() * rect.width(),
+            rect.y() + Math.random() * rect.height()
+        );
     }
 
     public static Point rotatePoint(Rect rect, Point point, double angle) {
