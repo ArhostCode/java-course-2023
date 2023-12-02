@@ -1,9 +1,8 @@
 package edu.project4.utils;
 
-import lombok.experimental.UtilityClass;
-
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
+import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class ListUtils {
