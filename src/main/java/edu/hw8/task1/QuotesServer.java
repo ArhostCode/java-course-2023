@@ -46,7 +46,7 @@ public class QuotesServer {
     @SneakyThrows
     private void processConnections(ServerSocketChannel channel, Selector selector) {
         while (channel.isOpen()) {
-            if (selector.selectNow() > 0) {
+            if (selector.selectNow() > 0 || !selector.selectedKeys().isEmpty()) {
                 Iterator<SelectionKey> iterator = selector.selectedKeys().iterator();
                 while (iterator.hasNext()) {
                     SelectionKey key = iterator.next();

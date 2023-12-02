@@ -15,6 +15,7 @@ public class QuotesServerWorker implements Runnable {
 
     private final SocketChannel clientChannel;
     private final QuotesStorage quotesStorage;
+    private boolean isConnected = true;
     private final ByteBuffer byteBuffer = ByteBuffer.allocate(1024);
     private Runnable after;
     private Consumer<String> messageConsumer;
@@ -24,7 +25,7 @@ public class QuotesServerWorker implements Runnable {
         Selector selector = Selector.open();
         clientChannel.configureBlocking(false);
         clientChannel.register(selector, SelectionKey.OP_READ);
-        while (clientChannel.isConnected()) {
+        while (isConnected) {
             if (selector.selectNow() > 0) {
                 Iterator<SelectionKey> iterator = selector.selectedKeys().iterator();
                 while (iterator.hasNext()) {
@@ -32,6 +33,7 @@ public class QuotesServerWorker implements Runnable {
                     if (key.isReadable()) {
                         String message = readMessageFromClient();
                         if (message == null) {
+                            isConnected = false;
                             break;
                         }
                         if (messageConsumer != null) {

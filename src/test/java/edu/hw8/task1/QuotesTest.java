@@ -17,13 +17,20 @@ public class QuotesTest {
         List<String> userRequests = new ArrayList<>();
         List<String> serverResponses = new ArrayList<>();
         QuotesStorage quotesStorage = QuotesStorage.createDefault();
-        QuotesServer quotesServer = new QuotesServer(12345, quotesStorage, 1);
+        QuotesServer quotesServer = new QuotesServer(12345, quotesStorage, 2);
         QuotesClient quotesClient = new QuotesClient("localhost", 12345);
 
         quotesServer.setMessageConsumer(userRequests::add);
         Executors.newSingleThreadExecutor().execute(quotesServer::start);
         Thread.sleep(1000);
+
+        // Imitate multiconnnection
         quotesClient.start();
+        quotesClient.close();
+        quotesClient.start();
+        quotesClient.close();
+        quotesClient.start();
+
         serverResponses.add(quotesClient.requestQuote("личности"));
         serverResponses.add(quotesClient.requestQuote("оскорбления"));
 
