@@ -5,5 +5,5 @@ import edu.project4.model.world.Rect;
 
 @FunctionalInterface
 public interface Renderer {
-    FractalImage render(int width, int heigth, Rect world);
+    FractalImage render(int width, int height, Rect world);
 }

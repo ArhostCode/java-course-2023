@@ -3,11 +3,10 @@ package edu.project4.utils;
 import edu.project4.model.world.Point;
 import edu.project4.model.world.Rect;
 import java.util.concurrent.ThreadLocalRandom;
+import lombok.experimental.UtilityClass;
 
-public final class RectUtils {
-
-    private RectUtils() {
-    }
+@UtilityClass
+public class RectUtils {
 
     public static Point randomPoint(Rect rect) {
         return new Point(

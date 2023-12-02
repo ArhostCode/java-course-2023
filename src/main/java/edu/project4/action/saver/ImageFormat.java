@@ -9,7 +9,7 @@ public enum ImageFormat {
 
     PNG("png"),
     BMP("bmp"),
-    JPG("jpg");
+    JPEG("jpg");
 
     private final String formatName;
 

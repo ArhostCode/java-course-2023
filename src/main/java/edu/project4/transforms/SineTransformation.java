@@ -1,13 +1,11 @@
 package edu.project4.transforms;
 
 import edu.project4.model.world.Point;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class SineTransformation implements Transformation {
-    private final double weight = ThreadLocalRandom.current().nextDouble() * 2;
 
     @Override
     public Point apply(Point point) {
-        return new Point(weight * Math.sin(point.x()), weight * Math.sin(point.y()));
+        return new Point(Math.sin(point.x()), Math.sin(point.y()));
     }
 }

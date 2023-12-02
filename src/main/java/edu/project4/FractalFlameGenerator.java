@@ -9,7 +9,7 @@ import edu.project4.model.image.FractalImage;
 import edu.project4.model.world.Rect;
 import edu.project4.renderer.MultiThreadRenderer;
 import edu.project4.renderer.Renderer;
-import edu.project4.transforms.SphereTransformation;
+import edu.project4.transforms.HeartTransformation;
 import java.nio.file.Path;
 import java.util.List;
 
@@ -18,28 +18,36 @@ public final class FractalFlameGenerator {
     private FractalFlameGenerator() {
     }
 
-    public static void generate() {
-        int width = 2000;
-        int height = 1000;
-        FractalImage image;
-        Renderer renderer = new MultiThreadRenderer(
-            5,
-            5,
-            1000000,
-            2,
-            List.of(
-                new SphereTransformation()
-            )
-        );
-        image = renderer.render(width, height, new Rect(-4, -3, 8, 6));
-        ImageProcessor processor = new LogGammaCorrectionImageProcessor();
-        processor.process(image);
-//        System.out.println((System.currentTimeMillis() - start) / 1000.0);
-        ImageSaver saver = new FormatImageSaver(ImageFormat.BMP);
-        saver.save(image, Path.of("image.bmp"));
+    public static void generate(
+        int width,
+        int height,
+        Rect area,
+        Renderer renderer,
+        List<ImageProcessor> processors,
+        Path path,
+        ImageFormat format
+    ) {
+        FractalImage image = renderer.render(width, height, area);
+        for (ImageProcessor processor : processors) {
+            processor.process(image);
+        }
+        ImageSaver saver = new FormatImageSaver(format);
+        saver.save(image, path);
     }
 
+    @SuppressWarnings({"checkstyle:UncommentedMain", "checkstyle:MagicNumber"})
     public static void main(String[] args) {
-        generate();
+        generate(
+            2000,
+            1000,
+            new Rect(-4, -3, 8, 6),
+            new MultiThreadRenderer(
+                5, 5, 1000000,
+                5, List.of(new HeartTransformation())
+            ),
+            List.of(new LogGammaCorrectionImageProcessor()),
+            Path.of("image.png"),
+            ImageFormat.PNG
+        );
     }
 }

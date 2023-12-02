@@ -9,7 +9,7 @@ public class LogGammaCorrectionImageProcessor implements ImageProcessor {
     @Override
     public void process(FractalImage image) {
         double max = 0.0;
-        double gamma = GAMMA; //2.2
+        double gamma = GAMMA;
         for (int y = 0; y < image.height(); y++) {
             for (int x = 0; x < image.width(); x++) {
                 if (image.pixel(x, y).getHitCount() != 0) {
