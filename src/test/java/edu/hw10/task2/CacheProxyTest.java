@@ -6,7 +6,7 @@ import java.io.Serializable;
 
 public class CacheProxyTest {
 
-    @Test
+    @SneakyThrows @Test
     public void test() {
         FibCalculator proxy = number -> {
             try {
