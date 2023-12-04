@@ -37,6 +37,7 @@ public final class FractalFlameGenerator {
 
     @SuppressWarnings({"checkstyle:UncommentedMain", "checkstyle:MagicNumber"})
     public static void main(String[] args) {
+        // Example usage
         generate(
             2000,
             1000,
