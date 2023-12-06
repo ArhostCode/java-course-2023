@@ -2,14 +2,13 @@ package edu.hw10.task1;
 
 import edu.hw10.task1.annotations.NotNull;
 import edu.hw10.task1.generators.Generators;
-import lombok.RequiredArgsConstructor;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public final class RandomObjectGenerator {
@@ -26,6 +25,20 @@ public final class RandomObjectGenerator {
 
     public <T> T nextObject(Class<T> clazz) {
         Constructor<?> constructor = ReflectionUtils.getConstructorWithMaxParams(clazz);
+        return nextObject(clazz, constructor);
+    }
+
+    public <T> T nextObjectWithSpecifiedConstructor(Class<T> clazz, Class<?>... params) {
+        try {
+            Constructor<?> constructor = clazz.getConstructor(params);
+            return nextObject(clazz, constructor);
+        } catch (Exception e) {
+            throw new IllegalStateException(
+                "Failed to create an instance of with specified constructor " + clazz.getName(), e);
+        }
+    }
+
+    public <T> T nextObject(Class<T> clazz, Constructor<?> constructor) {
         Object[] params = generateParams(constructor.getParameters());
         try {
             return clazz.cast(constructor.newInstance(params));
