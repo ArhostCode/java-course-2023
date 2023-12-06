@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.stream.Collectors;
 import lombok.SneakyThrows;
 
 public final class CacheProxy {
@@ -70,9 +71,6 @@ public final class CacheProxy {
         }
 
         public Object computePersistCache(Method method, Object[] args) {
-            if (args.length > 1) {
-                throw new IllegalArgumentException("Only one or none argument is allowed");
-            }
             Serializer<?> resultSerializer = serializers.get(method.getReturnType());
             if (resultSerializer == null) {
                 throw new IllegalArgumentException("Unsupported for persist return type: " + method.getReturnType());
@@ -80,14 +78,14 @@ public final class CacheProxy {
             if (args.length == 0) {
                 return computeNoArgsPersistCache(method, args, resultSerializer);
             } else {
-                return computeOneArgPersistCache(method, args, resultSerializer);
+                return computeManyArgsPersistCache(method, args, resultSerializer);
             }
         }
 
         @SneakyThrows
         public Object computeNoArgsPersistCache(Method method, Object[] args, Serializer<?> resultSerializer) {
             if (Files.exists(persistPath.resolve(method.getName()))) {
-                return resultSerializer.deserialize(Files.readString(persistPath.resolve(method.getName())));
+                return resultSerializer.deserialize(Files.readString(persistPath.resolve(getFileName(method))));
             } else {
                 Object result = method.invoke(cachingObject, args);
                 Files.writeString(persistPath.resolve(method.getName()), resultSerializer.serialize(result));
@@ -96,21 +94,27 @@ public final class CacheProxy {
         }
 
         @SneakyThrows
-        public Object computeOneArgPersistCache(Method method, Object[] args, Serializer<?> resultSerializer) {
-            Serializer<?> argSerializer = serializers.get(args[0].getClass());
-            if (argSerializer == null) {
-                throw new IllegalArgumentException("Unsupported for persist argument type: " + args[0].getClass());
-            }
-            if (Files.exists(persistPath.resolve(method.getName()))) {
-                Properties properties = new Properties();
-                properties.load(Files.newBufferedReader(persistPath.resolve(method.getName())));
-                if (properties.containsKey(argSerializer.serialize(args[0]))) {
-                    return resultSerializer.deserialize(properties.getProperty(argSerializer.serialize(args[0])));
+        public Object computeManyArgsPersistCache(Method method, Object[] args, Serializer<?> resultSerializer) {
+            StringBuilder serializedArgumentsBuilder = new StringBuilder();
+            for (Object arg : args) {
+                Serializer<?> argSerializer = serializers.get(arg.getClass());
+                if (argSerializer == null) {
+                    throw new IllegalArgumentException("Unsupported for persist argument type: " + arg.getClass());
                 }
-                return computeAndSaveCache(method, args, argSerializer, resultSerializer, properties);
+                serializedArgumentsBuilder.append(argSerializer.serialize(arg)).append(";");
+            }
+            String serializedArguments = serializedArgumentsBuilder.toString();
+            String fileName = getFileName(method);
+            if (Files.exists(persistPath.resolve(fileName))) {
+                Properties properties = new Properties();
+                properties.load(Files.newBufferedReader(persistPath.resolve(fileName)));
+                if (properties.containsKey(serializedArguments)) {
+                    return resultSerializer.deserialize(properties.getProperty(serializedArguments));
+                }
+                return computeAndSaveCache(method, args, serializedArguments, resultSerializer, properties);
             } else {
                 Properties properties = new Properties();
-                return computeAndSaveCache(method, args, argSerializer, resultSerializer, properties);
+                return computeAndSaveCache(method, args, serializedArguments, resultSerializer, properties);
             }
         }
 
@@ -118,15 +122,20 @@ public final class CacheProxy {
         private Object computeAndSaveCache(
             Method method,
             Object[] args,
-            Serializer<?> argsSerializer,
+            String serializedArguments,
             Serializer<?> resultSerializer,
             Properties properties
         ) {
             Object result = method.invoke(cachingObject, args);
-            properties.put(argsSerializer.serialize(result), resultSerializer.serialize(result));
-            properties.store(Files.newBufferedWriter(persistPath.resolve(method.getName())), null);
+            properties.put(serializedArguments, resultSerializer.serialize(result));
+            properties.store(Files.newBufferedWriter(persistPath.resolve(getFileName(method))), null);
             return result;
         }
-    }
 
+        private String getFileName(Method method) {
+            return method.getName() + Arrays.stream(method.getParameters()).map(
+                p -> "_" + p.getType().getName()
+            ).collect(Collectors.joining());
+        }
+    }
 }

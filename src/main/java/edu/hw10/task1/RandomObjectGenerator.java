@@ -2,13 +2,14 @@ package edu.hw10.task1;
 
 import edu.hw10.task1.annotations.NotNull;
 import edu.hw10.task1.generators.Generators;
+import lombok.RequiredArgsConstructor;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
-import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public final class RandomObjectGenerator {
@@ -27,7 +28,7 @@ public final class RandomObjectGenerator {
         Constructor<?> constructor = ReflectionUtils.getConstructorWithMaxParams(clazz);
         Object[] params = generateParams(constructor.getParameters());
         try {
-            return (T) constructor.newInstance(params);
+            return clazz.cast(constructor.newInstance(params));
         } catch (Exception e) {
             throw new IllegalStateException("Failed to create an instance of " + clazz.getName(), e);
         }
@@ -37,7 +38,7 @@ public final class RandomObjectGenerator {
         Method method = ReflectionUtils.getMethod(clazz, factoryMethod);
         Object[] params = generateParams(method.getParameters());
         try {
-            return (T) method.invoke(null, params);
+            return clazz.cast(method.invoke(null, params));
         } catch (Exception e) {
             throw new IllegalStateException(
                 "Failed to create an instance with method " + factoryMethod + " of " + clazz.getName(), e);
