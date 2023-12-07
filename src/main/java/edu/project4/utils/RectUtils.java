@@ -11,7 +11,7 @@ public class RectUtils {
     public static Point randomPoint(Rect rect) {
         return new Point(
             rect.x() + ThreadLocalRandom.current().nextDouble() * rect.width(),
-            rect.y() + Math.random() * rect.height()
+            rect.y() + ThreadLocalRandom.current().nextDouble() * rect.height()
         );
     }
 
