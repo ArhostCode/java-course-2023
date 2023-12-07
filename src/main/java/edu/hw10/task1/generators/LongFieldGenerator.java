@@ -12,11 +12,11 @@ public class LongFieldGenerator implements FieldGenerator<Long> {
         long min = Long.MIN_VALUE;
         long max = Long.MAX_VALUE - 1;
         for (Annotation annotation : annotations) {
-            if (annotation instanceof Min) {
-                min = ((Min) annotation).value();
+            if (annotation instanceof Min minAnnotation) {
+                min = minAnnotation.value();
             }
-            if (annotation instanceof Max) {
-                max = ((Max) annotation).value();
+            if (annotation instanceof Max maxAnnotation) {
+                max = maxAnnotation.value();
             }
         }
         return random.nextLong(min, max + 1);

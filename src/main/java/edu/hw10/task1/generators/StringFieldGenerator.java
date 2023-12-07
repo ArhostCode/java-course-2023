@@ -19,11 +19,11 @@ public class StringFieldGenerator implements FieldGenerator<String> {
         int maxLength = DEFAULT_MAX_LENGTH;
 
         for (Annotation annotation : annotations) {
-            if (annotation instanceof Min) {
-                minLength = (int) ((Min) annotation).value();
+            if (annotation instanceof Min minAnnotation) {
+                minLength = (int) minAnnotation.value();
             }
-            if (annotation instanceof Max) {
-                maxLength = (int) ((Max) annotation).value();
+            if (annotation instanceof Max maxAnnotation) {
+                maxLength = (int) maxAnnotation.value();
             }
         }
         int length = random.nextInt(minLength, maxLength + 1);

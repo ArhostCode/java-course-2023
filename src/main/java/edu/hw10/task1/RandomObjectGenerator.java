@@ -33,7 +33,7 @@ public final class RandomObjectGenerator {
             Constructor<?> constructor = clazz.getConstructor(params);
             return nextObject(clazz, constructor);
         } catch (Exception e) {
-            throw new IllegalStateException(
+            throw new IllegalArgumentException(
                 "Failed to create an instance of with specified constructor " + clazz.getName(), e);
         }
     }

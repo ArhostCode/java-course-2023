@@ -12,7 +12,6 @@ public final class Serializers {
         Map<Class<?>, Serializer<?>> serializers = new HashMap<>();
         serializers.put(Long.class, new LongSerializer());
         serializers.put(long.class, new LongSerializer());
-        serializers.put(String.class, new StringSerializer());
         return serializers;
     }
 
