@@ -1,16 +1,16 @@
 package edu.hw9.task1;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.Future;
+import lombok.SneakyThrows;
 
 public class StatsCollector {
 
-    private final List<Metric> metrics = new CopyOnWriteArrayList<>();
-    private final AtomicInteger counter = new AtomicInteger(0);
+    private final List<Future<Metric>> futures = new ArrayList<>();
     private final ExecutorService executorService;
 
     public StatsCollector(int threadCount) {
@@ -18,16 +18,14 @@ public class StatsCollector {
     }
 
     public void push(String metricName, double... values) {
-        counter.incrementAndGet();
-        executorService.execute(() -> {
-            metrics.add(collect(metricName, values));
-            counter.decrementAndGet();
-        });
+        futures.add(executorService.submit(() -> collect(metricName, values)));
     }
 
+    @SneakyThrows
     public List<Metric> stats() {
-        // Await all tasks to finish, tasks may come from different threads during this method execution
-        while (counter.get() != 0) {
+        List<Metric> metrics = new ArrayList<>();
+        for (Future<Metric> future : futures) {
+            metrics.add(future.get());
         }
         return metrics;
     }
