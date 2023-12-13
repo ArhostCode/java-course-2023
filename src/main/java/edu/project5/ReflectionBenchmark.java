@@ -53,7 +53,7 @@ public class ReflectionBenchmark {
     private Function<Student, String> lambdaMetaFactory;
 
     @SneakyThrows @Setup
-    public void setup() throws NoSuchMethodException, IllegalAccessException {
+    public void setup() {
         student = new Student("Alexander", "Biryukov");
 
         method = Student.class.getMethod(TESTING_METHOD);
@@ -91,7 +91,7 @@ public class ReflectionBenchmark {
     }
 
     @Benchmark
-    public void lambdaMetaFactory(Blackhole blackhole) throws Throwable {
+    public void lambdaMetaFactory(Blackhole blackhole) {
         String name = lambdaMetaFactory.apply(student);
         blackhole.consume(name);
     }
