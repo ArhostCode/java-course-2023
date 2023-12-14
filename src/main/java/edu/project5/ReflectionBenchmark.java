@@ -54,7 +54,7 @@ public class ReflectionBenchmark {
 
     @SneakyThrows @Setup
     public void setup() {
-        student = new Student("Alexander", "Biryukov");
+        student = new Student("Egor", "Gulyakin");
 
         method = Student.class.getMethod(TESTING_METHOD);
 
