@@ -1,7 +1,6 @@
 package edu.hw11.task2;
 
-@SuppressWarnings("checkstyle:FinalClass")
-public class ArithmeticUtils {
+public final class ArithmeticUtils {
     private ArithmeticUtils() {
     }
 

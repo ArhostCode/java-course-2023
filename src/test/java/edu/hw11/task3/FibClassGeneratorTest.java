@@ -1,10 +1,10 @@
 package edu.hw11.task3;
 
+import java.lang.reflect.Method;
 import lombok.SneakyThrows;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import java.lang.reflect.Method;
 
 public class FibClassGeneratorTest {
 

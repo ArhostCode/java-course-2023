@@ -9,11 +9,13 @@ import net.bytebuddy.implementation.bytecode.ByteCodeAppender;
 import net.bytebuddy.jar.asm.Label;
 import net.bytebuddy.jar.asm.MethodVisitor;
 import net.bytebuddy.jar.asm.Opcodes;
+import org.jetbrains.annotations.NotNull;
 
 public final class FibClassGenerator {
 
     private static final String FIB_CLASS_NAME = "Fibonacci";
     private static final String FUNCTION_NAME = "fib";
+    private static final int FUNCTION_OPERANDS_STACK_SIZE = 5;
     private static final String FUNCTION_SIGNATURE = "(I)J";
 
     private FibClassGenerator() {
@@ -41,39 +43,30 @@ public final class FibClassGenerator {
     private final static class FibByteCodeAppender implements ByteCodeAppender {
 
         @Override
+        @NotNull
         public Size apply(
             MethodVisitor methodVisitor,
-            Implementation.Context context,
-            MethodDescription methodDescription
+            @NotNull Implementation.Context context,
+            @NotNull MethodDescription methodDescription
         ) {
-            Label notZeroLabel = new Label();
-            Label notOneLabel = new Label();
+            Label moreTwoLabel = new Label();
 
-            methodVisitor.visitInsn(Opcodes.ICONST_0);
             methodVisitor.visitVarInsn(Opcodes.ILOAD, 1);
-            methodVisitor.visitJumpInsn(Opcodes.IF_ICMPNE, notZeroLabel);
-            methodVisitor.visitInsn(Opcodes.LCONST_0);
+            methodVisitor.visitInsn(Opcodes.ICONST_2);
+            methodVisitor.visitJumpInsn(Opcodes.IF_ICMPGE, moreTwoLabel);
+            methodVisitor.visitVarInsn(Opcodes.ILOAD, 1);
+            methodVisitor.visitInsn(Opcodes.I2L);
             methodVisitor.visitInsn(Opcodes.LRETURN);
 
-            // not zero
-            methodVisitor.visitLabel(notZeroLabel);
-            methodVisitor.visitFrame(Opcodes.F_SAME, 0, null, 0, null);
-            methodVisitor.visitVarInsn(Opcodes.ILOAD, 1);
-            methodVisitor.visitInsn(Opcodes.ICONST_1);
-
-            methodVisitor.visitJumpInsn(Opcodes.IF_ICMPNE, notOneLabel);
-            methodVisitor.visitInsn(Opcodes.LCONST_1);
-            methodVisitor.visitInsn(Opcodes.LRETURN);
-
-            // not one
-            methodVisitor.visitLabel(notOneLabel);
+            // more than 2
+            methodVisitor.visitLabel(moreTwoLabel);
             methodVisitor.visitFrame(Opcodes.F_SAME, 0, null, 0, null);
             methodVisitor.visitVarInsn(Opcodes.ALOAD, 0);
             methodVisitor.visitVarInsn(Opcodes.ILOAD, 1);
             methodVisitor.visitInsn(Opcodes.ICONST_1);
+            methodVisitor.visitInsn(Opcodes.ISUB);
 
             // fib(n - 1)
-            methodVisitor.visitInsn(Opcodes.ISUB);
             methodVisitor.visitMethodInsn(
                 Opcodes.INVOKEVIRTUAL,
                 FIB_CLASS_NAME,
@@ -81,6 +74,7 @@ public final class FibClassGenerator {
                 FUNCTION_SIGNATURE,
                 false
             );
+
             methodVisitor.visitVarInsn(Opcodes.ALOAD, 0);
             methodVisitor.visitVarInsn(Opcodes.ILOAD, 1);
             methodVisitor.visitInsn(Opcodes.ICONST_2);
@@ -96,8 +90,9 @@ public final class FibClassGenerator {
             );
             methodVisitor.visitInsn(Opcodes.LADD);
             methodVisitor.visitInsn(Opcodes.LRETURN);
-            final int operandsCount = 5;
-            return new ByteCodeAppender.Size(operandsCount, 0);
+            // localVariableSize = 0 because Implementation.Simple creates variables
+            // for parameters and I don`t use anything else
+            return new ByteCodeAppender.Size(FUNCTION_OPERANDS_STACK_SIZE, 0);
         }
     }
 
