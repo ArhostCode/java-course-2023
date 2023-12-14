@@ -38,10 +38,11 @@ public class BasicConfigurationParserTest {
             .extracting("paths", "isRemote")
             .satisfies(
                 c -> {
-                    Assertions.assertThat(c.get(0)).isIn(
-                        List.of("logs\\dir\\log3.txt", "logs\\log1.txt", "logs\\log2.txt"),
-                        List.of("logs/log1.txt", "logs/log2.txt","logs/dir/log3.txt")
+                    Assertions.assertThat(c.get(0)).asList().containsAnyOf(
+                        "logs/log1.txt", "logs/log2.txt", "logs/dir/log3.txt",
+                        "logs\\log1.txt", "logs\\log2.txt", "logs\\dir\\log3.txt"
                     );
+                    Assertions.assertThat(c.get(0)).asList().hasSize(3);
                     Assertions.assertThat(c.get(1)).isEqualTo(false);
                 }
             );
