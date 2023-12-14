@@ -206,7 +206,7 @@
                     <configuration>
                         <excludes>
                             <!--  Resolve problem with compatibility bytebuddy and jacoco -->
-                            <!--  Without this statement crashs with exception. Primitive solving problem -->
+                            <!--  Without this statement crash with exception. Primitive solving problem -->
                             <!--  More: https://github.com/raphw/byte-buddy/issues/1248 -->
                             <exclude>*ArithmeticUtils*</exclude>
                         </excludes>
