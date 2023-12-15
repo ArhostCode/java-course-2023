@@ -20,16 +20,16 @@ public final class CacheProxy {
     private CacheProxy() {
     }
 
-    public static <T> T create(T object, Map<Class<?>, Serializer<?>> serializers, Path persistPath) {
-        return (T) Proxy.newProxyInstance(
+    public static <T> T create(T object, Class<T> clazz, Map<Class<?>, Serializer<?>> serializers, Path persistPath) {
+        return clazz.cast(Proxy.newProxyInstance(
             object.getClass().getClassLoader(),
-            object.getClass().getInterfaces(),
+            new Class[] {clazz},
             new CacheInvocationHandler<>(object, serializers, persistPath)
-        );
+        ));
     }
 
-    public static <T> T create(T object, Path persistPath) {
-        return create(object, Serializers.defaultSerializers(), persistPath);
+    public static <T> T create(T object, Class<T> clazz, Path persistPath) {
+        return create(object, clazz, Serializers.defaultSerializers(), persistPath);
     }
 
     private final static class CacheInvocationHandler<T> implements InvocationHandler {

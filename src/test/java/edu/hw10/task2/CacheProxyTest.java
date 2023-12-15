@@ -13,7 +13,7 @@ public class CacheProxyTest {
     @DisplayName("Тестирование CacheProxy#create")
     public void create_shouldReturnProxiedObject_withoutPersist(@TempDir File tempDir) {
         NewFibCalculator proxy = new FibImplWithoutPersist();
-        proxy = CacheProxy.create(proxy, tempDir.toPath());
+        proxy = CacheProxy.create(proxy, NewFibCalculator.class, tempDir.toPath());
 
         proxy.fib(10);
         long cachedNum = proxy.fib(10);

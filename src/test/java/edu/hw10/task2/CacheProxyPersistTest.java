@@ -16,7 +16,7 @@ public class CacheProxyPersistTest {
     @DisplayName("Тестирование CacheProxy#create")
     public void create_shouldReturnProxiedObject(@TempDir File tempDir) {
         FibCalculator proxy = new FibImpl();
-        proxy = CacheProxy.create(proxy, tempDir.toPath());
+        proxy = CacheProxy.create(proxy, FibCalculator.class, tempDir.toPath());
 
         long num = proxy.fib(10);
         long cachedNum = proxy.fib(10);
@@ -32,7 +32,7 @@ public class CacheProxyPersistTest {
     @DisplayName("Тестирование CacheProxy#create")
     public void create_shouldReturnProxiedObject_withoutParams(@TempDir File tempDir) {
         SomeInterface proxy = new SomeImpl();
-        proxy = CacheProxy.create(proxy, tempDir.toPath());
+        proxy = CacheProxy.create(proxy, SomeInterface.class, tempDir.toPath());
 
         long num = proxy.get();
         long cachedNum = proxy.get();
