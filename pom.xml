@@ -45,6 +45,8 @@
 
         <jacoco-maven-plugin.version>0.8.10</jacoco-maven-plugin.version>
         <jmh.version>1.37</jmh.version>
+        <bytebuddy.version>1.14.9</bytebuddy.version>
+        <asm.version>9.6</asm.version>
     </properties>
 
     <dependencyManagement>
@@ -64,22 +66,37 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-
-            <!-- For resolve assertJ`s and mockito`s byte-buddy version conflict -->
-            <dependency>
-                <groupId>net.bytebuddy</groupId>
-                <artifactId>byte-buddy</artifactId>
-                <version>1.14.9</version>
-            </dependency>
         </dependencies>
     </dependencyManagement>
 
     <dependencies>
         <dependency>
+            <groupId>org.ow2.asm</groupId>
+            <artifactId>asm</artifactId>
+            <version>${asm.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>net.bytebuddy</groupId>
+            <artifactId>byte-buddy-agent</artifactId>
+            <version>${bytebuddy.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.bytebuddy</groupId>
+            <artifactId>byte-buddy</artifactId>
+            <version>${bytebuddy.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
             <version>${jetbrains-annotations.version}</version>
             <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.16.0</version>
         </dependency>
 
         <!-- Logging -->
@@ -207,6 +224,14 @@
                             </goals>
                         </execution>
                     </executions>
+                    <configuration>
+                        <excludes>
+                            <!--  Resolve problem with compatibility bytebuddy and jacoco -->
+                            <!--  Without this statement crash with exception. Primitive solving problem -->
+                            <!--  More: https://github.com/raphw/byte-buddy/issues/1248 -->
+                            <exclude>*ArithmeticUtils*</exclude>
+                        </excludes>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
